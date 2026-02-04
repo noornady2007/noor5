@@ -1,0 +1,1583 @@
+<!doctype html>
+<html lang="ar" dir="rtl" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NOUR NADY - منصة الكورسات</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <script src="/_sdk/data_sdk.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&amp;display=swap" rel="stylesheet">
+  <style>
+        body { box-sizing: border-box; }
+        * { font-family: 'Cairo', sans-serif; }
+        .gradient-bg { background: linear-gradient(135deg, #1e3a5f 0%, #0d1b2a 100%); }
+        .card-gradient { background: linear-gradient(145deg, #2d4a6f 0%, #1e3a5f 100%); }
+        .gold-gradient { background: linear-gradient(135deg, #d4af37 0%, #f4d03f 50%, #d4af37 100%); }
+        .btn-gold { background: linear-gradient(135deg, #d4af37 0%, #f4d03f 100%); color: #1e3a5f; }
+        .btn-gold:hover { background: linear-gradient(135deg, #f4d03f 0%, #d4af37 100%); }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-fade { animation: fadeIn 0.5s ease-out; }
+        .toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); padding: 12px 24px; border-radius: 8px; z-index: 1000; }
+        .toast-success { background: #10b981; color: white; }
+        .toast-error { background: #ef4444; color: white; }
+    </style>
+  <style>@view-transition { navigation: auto; }</style>
+ </head>
+ <body class="h-full gradient-bg text-white overflow-auto">
+  <div id="app" class="h-full w-full"></div>
+  <script>
+        // Configuration
+        const defaultConfig = {
+            platform_name: 'NOUR NADY',
+            welcome_message: 'مرحباً بك في منصة نور نادي التعليمية',
+            primary_color: '#d4af37',
+            secondary_color: '#1e3a5f',
+            text_color: '#ffffff',
+            bg_color: '#0d1b2a',
+            accent_color: '#2d4a6f'
+        };
+
+        // Admin credentials (hashed in production)
+        const ADMIN_EMAIL = 'noornady00@gmeil.com';
+        const ADMIN_PASSWORD = 'noornady2007';
+
+        // State
+        let config = { ...defaultConfig };
+        let allData = [];
+        let currentUser = null;
+        let currentPage = 'home';
+        let isLoading = false;
+
+        // Grade options
+        const grades = [
+            { id: 'prep1', name: 'أولى إعدادي' },
+            { id: 'prep2', name: 'تا��ية إعدادي' },
+            { id: 'prep3', name: 'تالتة إعدادي' },
+            { id: 'sec1', name: 'أولى ثانوي' },
+            { id: 'sec2', name: 'تانية ثانوي' },
+            { id: 'sec3', name: 'تالتة ثانوي' }
+        ];
+
+        // Helper functions
+        function getStudents() {
+            return allData.filter(d => d.type === 'student');
+        }
+
+        function getCourses() {
+            return allData.filter(d => d.type === 'course');
+        }
+
+        function getExams() {
+            return allData.filter(d => d.type === 'exam');
+        }
+
+        function getProgress() {
+            return allData.filter(d => d.type === 'progress');
+        }
+
+        function getExamResults() {
+            return allData.filter(d => d.type === 'exam_result');
+        }
+
+        function showToast(message, type = 'success') {
+            const existing = document.querySelector('.toast');
+            if (existing) existing.remove();
+            
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type} animate-fade`;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
+
+        function getGradeName(gradeId) {
+            const grade = grades.find(g => g.id === gradeId);
+            return grade ? grade.name : gradeId;
+        }
+
+        // Render functions
+        function render() {
+            const app = document.getElementById('app');
+            
+            if (currentUser && currentUser.isAdmin) {
+                app.innerHTML = renderAdminDashboard();
+            } else if (currentUser && currentUser.status === 'approved') {
+                app.innerHTML = renderStudentDashboard();
+            } else if (currentUser && currentUser.status === 'pending') {
+                app.innerHTML = renderPendingPage();
+            } else if (currentUser && currentUser.status === 'rejected') {
+                app.innerHTML = renderRejectedPage();
+            } else {
+                switch(currentPage) {
+                    case 'login':
+                        app.innerHTML = renderLoginPage();
+                        break;
+                    case 'register':
+                        app.innerHTML = renderRegisterPage();
+                        break;
+                    case 'admin-login':
+                        app.innerHTML = renderAdminLoginPage();
+                        break;
+                    default:
+                        app.innerHTML = renderHomePage();
+                }
+            }
+            attachEventListeners();
+        }
+
+        function renderHomePage() {
+            return `
+                <div class="min-h-full flex flex-col">
+                    <nav class="p-4 flex justify-between items-center border-b border-gray-700">
+                        <h1 class="text-2xl font-bold gold-gradient bg-clip-text text-transparent" style="background-clip: text; -webkit-background-clip: text; color: transparent; background-image: linear-gradient(135deg, #d4af37 0%, #f4d03f 100%);">${config.platform_name}</h1>
+                        <div class="flex gap-3">
+                            <button onclick="navigateTo('login')" class="px-4 py-2 rounded-lg border border-yellow-500 text-yellow-500 hover:bg-yellow-500 hover:text-gray-900 transition">تسجيل الدخول</button>
+                            <button onclick="navigateTo('register')" class="btn-gold px-4 py-2 rounded-lg font-bold transition">إنشاء حساب</button>
+                        </div>
+                    </nav>
+                    
+                    <main class="flex-1 flex flex-col items-center justify-center p-8 text-center">
+                        <div class="animate-fade">
+                            <div class="w-32 h-32 mx-auto mb-6 rounded-full gold-gradient flex items-center justify-center">
+                                <svg class="w-16 h-16 text-gray-900" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M12 3L1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9L12 3zm6.82 6L12 12.72 5.18 9 12 5.28 18.82 9zM17 15.99l-5 2.73-5-2.73v-3.72L12 15l5-2.73v3.72z"/>
+                                </svg>
+                            </div>
+                            <h2 class="text-4xl font-bold mb-4">${config.welcome_message}</h2>
+                            <p class="text-xl text-gray-300 mb-8">منصة تعليمية متكاملة للمرحلة الإعدادية والثانوية</p>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto mt-8">
+                                <div class="card-gradient p-6 rounded-xl">
+                                    <div class="text-4xl mb-4">📚</div>
+                                    <h3 class="text-xl font-bold mb-2">كورسات متنوعة</h3>
+                                    <p class="text-gray-300">محتوى تعليمي شامل لجميع الصفوف</p>
+                                </div>
+                                <div class="card-gradient p-6 rounded-xl">
+                                    <div class="text-4xl mb-4">📝</div>
+                                    <h3 class="text-xl font-bold mb-2">امتحانات تفاعلية</h3>
+                                    <p class="text-gray-300">اختبر نفسك واعرف مستواك</p>
+                                </div>
+                                <div class="card-gradient p-6 rounded-xl">
+                                    <div class="text-4xl mb-4">📊</div>
+                                    <h3 class="text-xl font-bold mb-2">متابعة التقدم</h3>
+                                    <p class="text-gray-300">تتبع تقدمك في الدراسة</p>
+                                </div>
+                            </div>
+                        </div>
+                    </main>
+                    
+                    <footer class="p-4 text-center text-gray-400 border-t border-gray-700">
+                        <button onclick="navigateTo('admin-login')" class="text-sm hover:text-yellow-500 transition">دخول المشرف</button>
+                    </footer>
+                </div>
+            `;
+        }
+
+        function renderLoginPage() {
+            return `
+                <div class="min-h-full flex items-center justify-center p-4">
+                    <div class="card-gradient p-8 rounded-2xl w-full max-w-md animate-fade">
+                        <button onclick="navigateTo('home')" class="text-gray-400 hover:text-white mb-4">→ العودة</button>
+                        <h2 class="text-2xl font-bold text-center mb-6">تسجيل الدخول</h2>
+                        
+                        <form id="loginForm" class="space-y-4">
+                            <div>
+                                <label class="block text-sm mb-2">رقم الموبايل</label>
+                                <input type="tel" id="loginPhone" required class="w-full p-3 rounded-lg bg-gray-800 border border-gray-600 focus:border-yellow-500 focus:outline-none" placeholder="01xxxxxxxxx">
+                            </div>
+                            <div>
+                                <label class="block text-sm mb-2">كلمة السر</label>
+                                <input type="password" id="loginPassword" required class="w-full p-3 rounded-lg bg-gray-800 border border-gray-600 focus:border-yellow-500 focus:outline-none" placeholder="********">
+                            </div>
+                            <button type="submit" class="w-full btn-gold py-3 rounded-lg font-bold transition" ${isLoading ? 'disabled' : ''}>
+                                ${isLoading ? 'جاري التحميل...' : 'دخول'}
+                            </button>
+                        </form>
+                        
+                        <p class="text-center mt-4 text-gray-400">
+                            ليس لديك حساب؟ <button onclick="navigateTo('register')" class="text-yellow-500 hover:underline">إنشاء حساب</button>
+                        </p>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderRegisterPage() {
+            return `
+                <div class="min-h-full flex items-center justify-center p-4">
+                    <div class="card-gradient p-8 rounded-2xl w-full max-w-md animate-fade">
+                        <button onclick="navigateTo('home')" class="text-gray-400 hover:text-white mb-4">→ العودة</button>
+                        <h2 class="text-2xl font-bold text-center mb-6">إنشاء حساب جديد</h2>
+                        
+                        <form id="registerForm" class="space-y-4">
+                            <div>
+                                <label class="block text-sm mb-2">الاسم بالكامل</label>
+                                <input type="text" id="regName" required class="w-full p-3 rounded-lg bg-gray-800 border border-gray-600 focus:border-yellow-500 focus:outline-none" placeholder="الاسم">
+                            </div>
+                            <div>
+                                <label class="block text-sm mb-2">رقم الموبايل</label>
+                                <input type="tel" id="regPhone" required class="w-full p-3 rounded-lg bg-gray-800 border border-gray-600 focus:border-yellow-500 focus:outline-none" placeholder="01xxxxxxxxx">
+                            </div>
+                            <div>
+                                <label class="block text-sm mb-2">كلمة السر</label>
+                                <input type="password" id="regPassword" required class="w-full p-3 rounded-lg bg-gray-800 border border-gray-600 focus:border-yellow-500 focus:outline-none" placeholder="********">
+                            </div>
+                            <div>
+                                <label class="block text-sm mb-2">الصف الدراسي</label>
+                                <select id="regGrade" required class="w-full p-3 rounded-lg bg-gray-800 border border-gray-600 focus:border-yellow-500 focus:outline-none">
+                                    <option value="">اختر الصف</option>
+                                    ${grades.map(g => `<option value="${g.id}">${g.name}</option>`).join('')}
+                                </select>
+                            </div>
+                            <button type="submit" class="w-full btn-gold py-3 rounded-lg font-bold transition" ${isLoading ? 'disabled' : ''}>
+                                ${isLoading ? 'جاري التسجيل...' : 'تسجيل'}
+                            </button>
+                        </form>
+                        
+                        <p class="text-center mt-4 text-gray-400">
+                            لديك حساب؟ <button onclick="navigateTo('login')" class="text-yellow-500 hover:underline">تسجيل الدخول</button>
+                        </p>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderAdminLoginPage() {
+            return `
+                <div class="min-h-full flex items-center justify-center p-4">
+                    <div class="card-gradient p-8 rounded-2xl w-full max-w-md animate-fade">
+                        <button onclick="navigateTo('home')" class="text-gray-400 hover:text-white mb-4">→ العودة</button>
+                        <div class="text-center mb-6">
+                            <div class="w-20 h-20 mx-auto mb-4 rounded-full bg-red-600 flex items-center justify-center">
+                                <svg class="w-10 h-10" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/>
+                                </svg>
+                            </div>
+                            <h2 class="text-2xl font-bold">دخول المشرف</h2>
+                        </div>
+                        
+                        <form id="adminLoginForm" class="space-y-4">
+                            <div>
+                                <label class="block text-sm mb-2">البريد ��لإلكتروني</label>
+                                <input type="email" id="adminEmail" required class="w-full p-3 rounded-lg bg-gray-800 border border-gray-600 focus:border-yellow-500 focus:outline-none" placeholder="email@example.com">
+                            </div>
+                            <div>
+                                <label class="block text-sm mb-2">كلمة السر</label>
+                                <input type="password" id="adminPassword" required class="w-full p-3 rounded-lg bg-gray-800 border border-gray-600 focus:border-yellow-500 focus:outline-none" placeholder="********">
+                            </div>
+                            <button type="submit" class="w-full bg-red-600 hover:bg-red-700 py-3 rounded-lg font-bold transition">
+                                دخول
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderPendingPage() {
+            return `
+                <div class="min-h-full flex items-center justify-center p-4">
+                    <div class="card-gradient p-8 rounded-2xl w-full max-w-md text-center animate-fade">
+                        <div class="w-24 h-24 mx-auto mb-6 rounded-full bg-yellow-600 flex items-center justify-center">
+                            <svg class="w-12 h-12" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                            </svg>
+                        </div>
+                        <h2 class="text-2xl font-bold mb-4">في انتظار الموافقة</h2>
+                        <p class="text-gray-300 mb-6">تم إرسال طلبك للمشرف وسيتم مراجعته قريباً</p>
+                        <button onclick="logout()" class="btn-gold px-6 py-2 rounded-lg font-bold">تسجيل الخروج</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderRejectedPage() {
+            return `
+                <div class="min-h-full flex items-center justify-center p-4">
+                    <div class="card-gradient p-8 rounded-2xl w-full max-w-md text-center animate-fade">
+                        <div class="w-24 h-24 mx-auto mb-6 rounded-full bg-red-600 flex items-center justify-center">
+                            <svg class="w-12 h-12" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12 17 15.59z"/>
+                            </svg>
+                        </div>
+                        <h2 class="text-2xl font-bold mb-4">تم رفض الطلب</h2>
+                        <p class="text-gray-300 mb-6">للأسف تم رفض طلب التسجيل. يرجى التواصل مع المشرف.</p>
+                        <button onclick="logout()" class="btn-gold px-6 py-2 rounded-lg font-bold">تسجيل الخروج</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Admin Dashboard
+        let adminTab = 'overview';
+        
+        function renderAdminDashboard() {
+            const students = getStudents();
+            const courses = getCourses();
+            const exams = getExams();
+            const progress = getProgress();
+            const pendingStudents = students.filter(s => s.status === 'pending');
+            const approvedStudents = students.filter(s => s.status === 'approved');
+            
+            return `
+                <div class="min-h-full flex flex-col">
+                    <nav class="p-4 flex justify-between items-center border-b border-gray-700 bg-gray-900">
+                        <h1 class="text-xl font-bold">🛡️ لوحة تحكم المشرف</h1>
+                        <button onclick="logout()" class="text-red-400 hover:text-red-300">تسجيل الخروج</button>
+                    </nav>
+                    
+                    <div class="flex flex-1 overflow-hidden">
+                        <!-- Sidebar -->
+                        <aside class="w-64 bg-gray-900 border-l border-gray-700 p-4 overflow-y-auto">
+                            <nav class="space-y-2">
+                                <button onclick="setAdminTab('overview')" class="w-full text-right p-3 rounded-lg ${adminTab === 'overview' ? 'bg-yellow-600' : 'hover:bg-gray-800'}">📊 نظرة عامة</button>
+                                <button onclick="setAdminTab('students')" class="w-full text-right p-3 rounded-lg ${adminTab === 'students' ? 'bg-yellow-600' : 'hover:bg-gray-800'}">
+                                    👥 الطلاب
+                                    ${pendingStudents.length > 0 ? `<span class="bg-red-500 text-xs px-2 py-1 rounded-full mr-2">${pendingStudents.length}</span>` : ''}
+                                </button>
+                                <button onclick="setAdminTab('courses')" class="w-full text-right p-3 rounded-lg ${adminTab === 'courses' ? 'bg-yellow-600' : 'hover:bg-gray-800'}">📚 الكورسات</button>
+                                <button onclick="setAdminTab('exams')" class="w-full text-right p-3 rounded-lg ${adminTab === 'exams' ? 'bg-yellow-600' : 'hover:bg-gray-800'}">📝 الامتحانات</button>
+                                <button onclick="setAdminTab('analytics')" class="w-full text-right p-3 rounded-lg ${adminTab === 'analytics' ? 'bg-yellow-600' : 'hover:bg-gray-800'}">📈 الإحصائيات</button>
+                            </nav>
+                        </aside>
+                        
+                        <!-- Main Content -->
+                        <main class="flex-1 p-6 overflow-y-auto">
+                            ${renderAdminContent()}
+                        </main>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderAdminContent() {
+            switch(adminTab) {
+                case 'overview': return renderAdminOverview();
+                case 'students': return renderAdminStudents();
+                case 'courses': return renderAdminCourses();
+                case 'exams': return renderAdminExams();
+                case 'analytics': return renderAdminAnalytics();
+                default: return renderAdminOverview();
+            }
+        }
+
+        function renderAdminOverview() {
+            const students = getStudents();
+            const courses = getCourses();
+            const exams = getExams();
+            const progress = getProgress();
+            const pendingStudents = students.filter(s => s.status === 'pending');
+            const approvedStudents = students.filter(s => s.status === 'approved');
+            const videoOpened = progress.filter(p => p.video_opened).length;
+            const videoCompleted = progress.filter(p => p.video_completed).length;
+            
+            return `
+                <div class="animate-fade">
+                    <h2 class="text-2xl font-bold mb-6">نظرة عامة</h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+                        <div class="card-gradient p-6 rounded-xl">
+                            <div class="text-3xl mb-2">👥</div>
+                            <div class="text-3xl font-bold">${approvedStudents.length}</div>
+                            <div class="text-gray-400">طالب مسجل</div>
+                        </div>
+                        <div class="card-gradient p-6 rounded-xl">
+                            <div class="text-3xl mb-2">⏳</div>
+                            <div class="text-3xl font-bold text-yellow-500">${pendingStudents.length}</div>
+                            <div class="text-gray-400">في انتظار الموافقة</div>
+                        </div>
+                        <div class="card-gradient p-6 rounded-xl">
+                            <div class="text-3xl mb-2">📚</div>
+                            <div class="text-3xl font-bold">${courses.length}</div>
+                            <div class="text-gray-400">كورس</div>
+                        </div>
+                        <div class="card-gradient p-6 rounded-xl">
+                            <div class="text-3xl mb-2">📝</div>
+                            <div class="text-3xl font-bold">${exams.length}</div>
+                            <div class="text-gray-400">امتحان</div>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="card-gradient p-6 rounded-xl">
+                            <h3 class="text-xl font-bold mb-4">📊 إحصائيات المشاهدة</h3>
+                            <div class="space-y-4">
+                                <div class="flex justify-between items-center">
+                                    <span>فتحوا الفيديو</span>
+                                    <span class="text-2xl font-bold text-blue-400">${videoOpened}</span>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <span>أكملوا الفيديو</span>
+                                    <span class="text-2xl font-bold text-green-400">${videoCompleted}</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        ${pendingStudents.length > 0 ? `
+                        <div class="card-gradient p-6 rounded-xl">
+                            <h3 class="text-xl font-bold mb-4">🔔 طلبات جديدة</h3>
+                            <div class="space-y-3">
+                                ${pendingStudents.slice(0, 3).map(s => `
+                                    <div class="flex justify-between items-center bg-gray-800 p-3 rounded-lg">
+                                        <div>
+                                            <div class="font-bold">${s.student_name}</div>
+                                            <div class="text-sm text-gray-400">${getGradeName(s.grade)}</div>
+                                        </div>
+                                        <div class="flex gap-2">
+                                            <button onclick="approveStudent('${s.__backendId}')" class="bg-green-600 hover:bg-green-700 px-3 py-1 rounded text-sm">✓</button>
+                                            <button onclick="rejectStudent('${s.__backendId}')" class="bg-red-600 hover:bg-red-700 px-3 py-1 rounded text-sm">✗</button>
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                        ` : ''}
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderAdminStudents() {
+            const students = getStudents();
+            const pendingStudents = students.filter(s => s.status === 'pending');
+            const approvedStudents = students.filter(s => s.status === 'approved');
+            const rejectedStudents = students.filter(s => s.status === 'rejected');
+            
+            return `
+                <div class="animate-fade">
+                    <h2 class="text-2xl font-bold mb-6">إدارة الطلاب</h2>
+                    
+                    ${pendingStudents.length > 0 ? `
+                    <div class="mb-8">
+                        <h3 class="text-xl font-bold mb-4 text-yellow-500">⏳ في انتظار الموافقة (${pendingStudents.length})</h3>
+                        <div class="grid gap-3">
+                            ${pendingStudents.map(s => `
+                                <div class="card-gradient p-4 rounded-xl flex justify-between items-center">
+                                    <div>
+                                        <div class="font-bold text-lg">${s.student_name}</div>
+                                        <div class="text-sm text-gray-400">📱 ${s.phone} | 📚 ${getGradeName(s.grade)}</div>
+                                    </div>
+                                    <div class="flex gap-2">
+                                        <button onclick="approveStudent('${s.__backendId}')" class="bg-green-600 hover:bg-green-700 px-4 py-2 rounded-lg">موافقة ✓</button>
+                                        <button onclick="rejectStudent('${s.__backendId}')" class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg">رفض ✗</button>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                    ` : ''}
+                    
+                    <div class="mb-8">
+                        <h3 class="text-xl font-bold mb-4 text-green-500">✓ الطلاب المسجلين (${approvedStudents.length})</h3>
+                        ${approvedStudents.length > 0 ? `
+                        <div class="overflow-x-auto">
+                            <table class="w-full">
+                                <thead class="bg-gray-800">
+                                    <tr>
+                                        <th class="p-3 text-right">الاسم</th>
+                                        <th class="p-3 text-right">الموبايل</th>
+                                        <th class="p-3 text-right">الصف</th>
+                                        <th class="p-3 text-right">تاريخ التسجيل</th>
+                                        <th class="p-3 text-right">إجراءات</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${approvedStudents.map(s => `
+                                        <tr class="border-b border-gray-700">
+                                            <td class="p-3">${s.student_name}</td>
+                                            <td class="p-3">${s.phone}</td>
+                                            <td class="p-3">${getGradeName(s.grade)}</td>
+                                            <td class="p-3">${new Date(s.created_at).toLocaleDateString('ar-EG')}</td>
+                                            <td class="p-3">
+                                                <button onclick="deleteStudent('${s.__backendId}')" class="text-red-400 hover:text-red-300">حذف</button>
+                                            </td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                        ` : '<p class="text-gray-400">لا يوجد طلاب مسجلين</p>'}
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderAdminCourses() {
+            const courses = getCourses();
+            
+            return `
+                <div class="animate-fade">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-2xl font-bold">إدارة الكورسات</h2>
+                        <button onclick="showAddCourseForm()" class="btn-gold px-4 py-2 rounded-lg font-bold">+ إضافة كورس</button>
+                    </div>
+                    
+                    <div id="courseFormContainer"></div>
+                    
+                    <div class="grid gap-4">
+                        ${courses.length > 0 ? courses.map(c => `
+                            <div class="card-gradient p-4 rounded-xl">
+                                <div class="flex justify-between items-start">
+                                    <div>
+                                        <h3 class="text-xl font-bold">${c.course_title}</h3>
+                                        <p class="text-gray-400">📚 ${getGradeName(c.course_grade)}</p>
+                                        <p class="text-sm text-gray-500 mt-2">🔗 ${c.video_url || 'لا يوجد رابط'}</p>
+                                    </div>
+                                    <div class="flex gap-2">
+                                        <button onclick="editCourse('${c.__backendId}')" class="bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded">تعديل</button>
+                                        <button onclick="deleteCourse('${c.__backendId}')" class="bg-red-600 hover:bg-red-700 px-3 py-1 rounded">حذف</button>
+                                    </div>
+                                </div>
+                            </div>
+                        `).join('') : '<p class="text-gray-400 text-center py-8">لا توجد كورسات. أضف كورس جديد!</p>'}
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderAdminExams() {
+            const exams = getExams();
+            const examResults = getExamResults();
+            
+            return `
+                <div class="animate-fade">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-2xl font-bold">إدارة الامتحانات</h2>
+                        <button onclick="showAddExamForm()" class="btn-gold px-4 py-2 rounded-lg font-bold">+ إضافة امتحان</button>
+                    </div>
+                    
+                    <div id="examFormContainer"></div>
+                    
+                    <div class="grid gap-4">
+                        ${exams.length > 0 ? exams.map(e => {
+                            const results = examResults.filter(r => r.exam_id === e.__backendId);
+                            const avgScore = results.length > 0 ? Math.round(results.reduce((a, b) => a + (b.exam_score || 0), 0) / results.length) : 0;
+                            let questions = [];
+                            try { questions = JSON.parse(e.questions || '[]'); } catch(err) {}
+                            
+                            return `
+                            <div class="card-gradient p-4 rounded-xl">
+                                <div class="flex justify-between items-start">
+                                    <div>
+                                        <h3 class="text-xl font-bold">${e.exam_title}</h3>
+                                        <p class="text-gray-400">📚 ${getGradeName(e.exam_grade)} | 📝 ${questions.length} سؤال</p>
+                                        <p class="text-sm text-gray-500 mt-2">👥 ${results.length} طالب أدى الامتحان | متوسط: ${avgScore}%</p>
+                                    </div>
+                                    <div class="flex gap-2">
+                                        <button onclick="viewExamResults('${e.__backendId}')" class="bg-purple-600 hover:bg-purple-700 px-3 py-1 rounded">النتائج</button>
+                                        <button onclick="editExam('${e.__backendId}')" class="bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded">تعديل</button>
+                                        <button onclick="deleteExam('${e.__backendId}')" class="bg-red-600 hover:bg-red-700 px-3 py-1 rounded">حذف</button>
+                                    </div>
+                                </div>
+                            </div>
+                        `}).join('') : '<p class="text-gray-400 text-center py-8">لا توجد امتحانات. أضف امتحان جديد!</p>'}
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderAdminAnalytics() {
+            const students = getStudents().filter(s => s.status === 'approved');
+            const progress = getProgress();
+            const examResults = getExamResults();
+            
+            // Group by grade
+            const gradeStats = grades.map(g => {
+                const gradeStudents = students.filter(s => s.grade === g.id);
+                const gradeProgress = progress.filter(p => {
+                    const student = students.find(s => s.__backendId === p.student_id);
+                    return student && student.grade === g.id;
+                });
+                const gradeExams = examResults.filter(r => {
+                    const student = students.find(s => s.__backendId === r.student_id);
+                    return student && student.grade === g.id;
+                });
+                
+                return {
+                    ...g,
+                    studentCount: gradeStudents.length,
+                    videoOpened: gradeProgress.filter(p => p.video_opened).length,
+                    videoCompleted: gradeProgress.filter(p => p.video_completed).length,
+                    avgExamScore: gradeExams.length > 0 ? Math.round(gradeExams.reduce((a, b) => a + (b.exam_score || 0), 0) / gradeExams.length) : 0
+                };
+            });
+            
+            return `
+                <div class="animate-fade">
+                    <h2 class="text-2xl font-bold mb-6">الإحصائيا�� التفصيلية</h2>
+                    
+                    <div class="grid gap-4">
+                        ${gradeStats.map(g => `
+                            <div class="card-gradient p-4 rounded-xl">
+                                <h3 class="text-xl font-bold mb-4">${g.name}</h3>
+                                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                    <div class="bg-gray-800 p-3 rounded-lg text-center">
+                                        <div class="text-2xl font-bold">${g.studentCount}</div>
+                                        <div class="text-sm text-gray-400">طالب</div>
+                                    </div>
+                                    <div class="bg-gray-800 p-3 rounded-lg text-center">
+                                        <div class="text-2xl font-bold text-blue-400">${g.videoOpened}</div>
+                                        <div class="text-sm text-gray-400">فتحوا الفيديو</div>
+                                    </div>
+                                    <div class="bg-gray-800 p-3 rounded-lg text-center">
+                                        <div class="text-2xl font-bold text-green-400">${g.videoCompleted}</div>
+                                        <div class="text-sm text-gray-400">أكملوا الفيديو</div>
+                                    </div>
+                                    <div class="bg-gray-800 p-3 rounded-lg text-center">
+                                        <div class="text-2xl font-bold text-yellow-400">${g.avgExamScore}%</div>
+                                        <div class="text-sm text-gray-400">متوسط الامتحانات</div>
+                                    </div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        // Student Dashboard
+        let studentTab = 'courses';
+        
+        function renderStudentDashboard() {
+            const courses = getCourses().filter(c => c.course_grade === currentUser.grade);
+            const exams = getExams().filter(e => e.exam_grade === currentUser.grade);
+            const myProgress = getProgress().filter(p => p.student_id === currentUser.__backendId);
+            const myExamResults = getExamResults().filter(r => r.student_id === currentUser.__backendId);
+            
+            return `
+                <div class="min-h-full flex flex-col">
+                    <nav class="p-4 flex justify-between items-center border-b border-gray-700">
+                        <div>
+                            <h1 class="text-xl font-bold">${config.platform_name}</h1>
+                            <p class="text-sm text-gray-400">مرحباً ${currentUser.student_name} | ${getGradeName(currentUser.grade)}</p>
+                        </div>
+                        <button onclick="logout()" class="text-red-400 hover:text-red-300">تسجيل الخروج</button>
+                    </nav>
+                    
+                    <div class="flex border-b border-gray-700">
+                        <button onclick="setStudentTab('courses')" class="flex-1 p-4 ${studentTab === 'courses' ? 'border-b-2 border-yellow-500 text-yellow-500' : 'text-gray-400'}">📚 الكورسات</button>
+                        <button onclick="setStudentTab('exams')" class="flex-1 p-4 ${studentTab === 'exams' ? 'border-b-2 border-yellow-500 text-yellow-500' : 'text-gray-400'}">📝 الامتحانات</button>
+                        <button onclick="setStudentTab('results')" class="flex-1 p-4 ${studentTab === 'results' ? 'border-b-2 border-yellow-500 text-yellow-500' : 'text-gray-400'}">📊 نتائجي</button>
+                    </div>
+                    
+                    <main class="flex-1 p-6 overflow-y-auto">
+                        ${renderStudentContent()}
+                    </main>
+                </div>
+            `;
+        }
+
+        function renderStudentContent() {
+            switch(studentTab) {
+                case 'courses': return renderStudentCourses();
+                case 'exams': return renderStudentExams();
+                case 'results': return renderStudentResults();
+                default: return renderStudentCourses();
+            }
+        }
+
+        function renderStudentCourses() {
+            const courses = getCourses().filter(c => c.course_grade === currentUser.grade);
+            const myProgress = getProgress().filter(p => p.student_id === currentUser.__backendId);
+            
+            return `
+                <div class="animate-fade">
+                    <h2 class="text-2xl font-bold mb-6">الكورسات المتاحة</h2>
+                    
+                    ${courses.length > 0 ? `
+                    <div class="grid gap-4">
+                        ${courses.map(c => {
+                            const prog = myProgress.find(p => p.course_id === c.__backendId);
+                            return `
+                            <div class="card-gradient p-6 rounded-xl">
+                                <div class="flex justify-between items-start">
+                                    <div>
+                                        <h3 class="text-xl font-bold">${c.course_title}</h3>
+                                        ${prog ? `
+                                            <p class="text-sm mt-2">
+                                                ${prog.video_completed ? '<span class="text-green-400">✓ تم الإكمال</span>' : prog.video_opened ? '<span class="text-yellow-400">◐ قيد المشاهدة</span>' : ''}
+                                            </p>
+                                        ` : ''}
+                                    </div>
+                                    <button onclick="watchCourse('${c.__backendId}')" class="btn-gold px-4 py-2 rounded-lg">
+                                        ${prog && prog.video_opened ? 'متابعة' : 'مشاهدة'}
+                                    </button>
+                                </div>
+                            </div>
+                        `}).join('')}
+                    </div>
+                    ` : '<p class="text-gray-400 text-center py-8">لا توجد كورسات متاحة لصفك حالياً</p>'}
+                </div>
+            `;
+        }
+
+        function renderStudentExams() {
+            const exams = getExams().filter(e => e.exam_grade === currentUser.grade);
+            const myResults = getExamResults().filter(r => r.student_id === currentUser.__backendId);
+            
+            return `
+                <div class="animate-fade">
+                    <h2 class="text-2xl font-bold mb-6">الامتحانات المتاحة</h2>
+                    
+                    ${exams.length > 0 ? `
+                    <div class="grid gap-4">
+                        ${exams.map(e => {
+                            const result = myResults.find(r => r.exam_id === e.__backendId);
+                            let questions = [];
+                            try { questions = JSON.parse(e.questions || '[]'); } catch(err) {}
+                            
+                            return `
+                            <div class="card-gradient p-6 rounded-xl">
+                                <div class="flex justify-between items-start">
+                                    <div>
+                                        <h3 class="text-xl font-bold">${e.exam_title}</h3>
+                                        <p class="text-gray-400">📝 ${questions.length} سؤال</p>
+                                        ${result ? `
+                                            <p class="text-green-400 mt-2">✓ تم الأداء - الدرجة: ${result.exam_score}%</p>
+                                        ` : ''}
+                                    </div>
+                                    ${result ? `
+                                        <button onclick="viewMyExamResult('${e.__backendId}')" class="bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded-lg">عرض النتيجة</button>
+                                    ` : `
+                                        <button onclick="startExam('${e.__backendId}')" class="btn-gold px-4 py-2 rounded-lg">بدء الامتحان</button>
+                                    `}
+                                </div>
+                            </div>
+                        `}).join('')}
+                    </div>
+                    ` : '<p class="text-gray-400 text-center py-8">لا توجد امتحانات متاحة لصفك حالياً</p>'}
+                </div>
+            `;
+        }
+
+        function renderStudentResults() {
+            const myResults = getExamResults().filter(r => r.student_id === currentUser.__backendId);
+            const exams = getExams();
+            
+            return `
+                <div class="animate-fade">
+                    <h2 class="text-2xl font-bold mb-6">نتائجي</h2>
+                    
+                    ${myResults.length > 0 ? `
+                    <div class="grid gap-4">
+                        ${myResults.map(r => {
+                            const exam = exams.find(e => e.__backendId === r.exam_id);
+                            return `
+                            <div class="card-gradient p-6 rounded-xl">
+                                <div class="flex justify-between items-center">
+                                    <div>
+                                        <h3 class="text-xl font-bold">${exam ? exam.exam_title : 'امتحان محذوف'}</h3>
+                                        <p class="text-gray-400">${new Date(r.created_at).toLocaleDateString('ar-EG')}</p>
+                                    </div>
+                                    <div class="text-3xl font-bold ${r.exam_score >= 50 ? 'text-green-400' : 'text-red-400'}">
+                                        ${r.exam_score}%
+                                    </div>
+                                </div>
+                            </div>
+                        `}).join('')}
+                    </div>
+                    ` : '<p class="text-gray-400 text-center py-8">لم تؤدِ أي امتحانات بعد</p>'}
+                </div>
+            `;
+        }
+
+        // Action Functions
+        window.navigateTo = function(page) {
+            currentPage = page;
+            render();
+        };
+
+        window.setAdminTab = function(tab) {
+            adminTab = tab;
+            render();
+        };
+
+        window.setStudentTab = function(tab) {
+            studentTab = tab;
+            render();
+        };
+
+        window.logout = function() {
+            currentUser = null;
+            currentPage = 'home';
+            adminTab = 'overview';
+            studentTab = 'courses';
+            render();
+        };
+
+        // Student Actions
+        window.approveStudent = async function(id) {
+            const student = allData.find(d => d.__backendId === id);
+            if (student) {
+                student.status = 'approved';
+                const result = await window.dataSdk.update(student);
+                if (result.isOk) {
+                    showToast('تم قبول الطالب بنجاح');
+                } else {
+                    showToast('حدث خطأ', 'error');
+                }
+            }
+        };
+
+        window.rejectStudent = async function(id) {
+            const student = allData.find(d => d.__backendId === id);
+            if (student) {
+                student.status = 'rejected';
+                const result = await window.dataSdk.update(student);
+                if (result.isOk) {
+                    showToast('تم رفض الطالب');
+                } else {
+                    showToast('حدث خطأ', 'error');
+                }
+            }
+        };
+
+        window.deleteStudent = async function(id) {
+            const student = allData.find(d => d.__backendId === id);
+            if (student) {
+                const result = await window.dataSdk.delete(student);
+                if (result.isOk) {
+                    showToast('تم حذف الطالب');
+                } else {
+                    showToast('حدث خطأ', 'error');
+                }
+            }
+        };
+
+        // Course Actions
+        window.showAddCourseForm = function() {
+            const container = document.getElementById('courseFormContainer');
+            container.innerHTML = `
+                <div class="card-gradient p-6 rounded-xl mb-6 animate-fade">
+                    <h3 class="text-xl font-bold mb-4">إضافة كورس جديد</h3>
+                    <form id="addCourseForm" class="space-y-4">
+                        <div>
+                            <label class="block text-sm mb-2">عنوان الك��رس</label>
+                            <input type="text" id="courseTitle" required class="w-full p-3 rounded-lg bg-gray-800 border border-gray-600 focus:border-yellow-500 focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-sm mb-2">الصف الدراسي</label>
+                            <select id="courseGrade" required class="w-full p-3 rounded-lg bg-gray-800 border border-gray-600 focus:border-yellow-500 focus:outline-none">
+                                ${grades.map(g => `<option value="${g.id}">${g.name}</option>`).join('')}
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm mb-2">رابط الفيديو</label>
+                            <input type="url" id="courseVideo" class="w-full p-3 rounded-lg bg-gray-800 border border-gray-600 focus:border-yellow-500 focus:outline-none" placeholder="https://...">
+                        </div>
+                        <div class="flex gap-2">
+                            <button type="submit" class="btn-gold px-6 py-2 rounded-lg font-bold">حفظ</button>
+                            <button type="button" onclick="hideCourseForm()" class="bg-gray-600 hover:bg-gray-700 px-6 py-2 rounded-lg">إلغاء</button>
+                        </div>
+                    </form>
+                </div>
+            `;
+            
+            document.getElementById('addCourseForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const title = document.getElementById('courseTitle').value;
+                const grade = document.getElementById('courseGrade').value;
+                const video = document.getElementById('courseVideo').value;
+                
+                if (allData.length >= 999) {
+                    showToast('تم الوصول للحد الأقصى من البيانات', 'error');
+                    return;
+                }
+                
+                const result = await window.dataSdk.create({
+                    type: 'course',
+                    course_id: Date.now().toString(),
+                    course_title: title,
+                    course_grade: grade,
+                    video_url: video,
+                    created_at: new Date().toISOString()
+                });
+                
+                if (result.isOk) {
+                    showToast('تم إضافة الكورس بنجاح');
+                    hideCourseForm();
+                } else {
+                    showToast('حدث خطأ', 'error');
+                }
+            });
+        };
+
+        window.hideCourseForm = function() {
+            document.getElementById('courseFormContainer').innerHTML = '';
+        };
+
+        window.editCourse = function(id) {
+            const course = allData.find(d => d.__backendId === id);
+            if (!course) return;
+            
+            const container = document.getElementById('courseFormContainer');
+            container.innerHTML = `
+                <div class="card-gradient p-6 rounded-xl mb-6 animate-fade">
+                    <h3 class="text-xl font-bold mb-4">تعديل الكورس</h3>
+                    <form id="editCourseForm" class="space-y-4">
+                        <div>
+                            <label class="block text-sm mb-2">عنوان الكورس</label>
+                            <input type="text" id="courseTitle" value="${course.course_title}" required class="w-full p-3 rounded-lg bg-gray-800 border border-gray-600 focus:border-yellow-500 focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-sm mb-2">الصف الدراسي</label>
+                            <select id="courseGrade" required class="w-full p-3 rounded-lg bg-gray-800 border border-gray-600 focus:border-yellow-500 focus:outline-none">
+                                ${grades.map(g => `<option value="${g.id}" ${g.id === course.course_grade ? 'selected' : ''}>${g.name}</option>`).join('')}
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm mb-2">رابط الفيديو</label>
+                            <input type="url" id="courseVideo" value="${course.video_url || ''}" class="w-full p-3 rounded-lg bg-gray-800 border border-gray-600 focus:border-yellow-500 focus:outline-none">
+                        </div>
+                        <div class="flex gap-2">
+                            <button type="submit" class="btn-gold px-6 py-2 rounded-lg font-bold">حفظ التعديلات</button>
+                            <button type="button" onclick="hideCourseForm()" class="bg-gray-600 hover:bg-gray-700 px-6 py-2 rounded-lg">إلغاء</button>
+                        </div>
+                    </form>
+                </div>
+            `;
+            
+            document.getElementById('editCourseForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                course.course_title = document.getElementById('courseTitle').value;
+                course.course_grade = document.getElementById('courseGrade').value;
+                course.video_url = document.getElementById('courseVideo').value;
+                
+                const result = await window.dataSdk.update(course);
+                if (result.isOk) {
+                    showToast('تم تعديل الكورس بنجاح');
+                    hideCourseForm();
+                } else {
+                    showToast('حدث خطأ', 'error');
+                }
+            });
+        };
+
+        window.deleteCourse = async function(id) {
+            const course = allData.find(d => d.__backendId === id);
+            if (course) {
+                const result = await window.dataSdk.delete(course);
+                if (result.isOk) {
+                    showToast('تم حذف الكورس');
+                } else {
+                    showToast('حدث خطأ', 'error');
+                }
+            }
+        };
+
+        // Exam Actions
+        let examQuestions = [];
+
+        window.showAddExamForm = function() {
+            examQuestions = [];
+            renderExamForm();
+        };
+
+        function renderExamForm(editingExam = null) {
+            const container = document.getElementById('examFormContainer');
+            container.innerHTML = `
+                <div class="card-gradient p-6 rounded-xl mb-6 animate-fade">
+                    <h3 class="text-xl font-bold mb-4">${editingExam ? 'تعديل الامتحان' : 'إضافة امتحان جديد'}</h3>
+                    <form id="examForm" class="space-y-4">
+                        <div>
+                            <label class="block text-sm mb-2">عنوان الامتحان</label>
+                            <input type="text" id="examTitle" value="${editingExam ? editingExam.exam_title : ''}" required class="w-full p-3 rounded-lg bg-gray-800 border border-gray-600 focus:border-yellow-500 focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-sm mb-2">الصف الدراسي</label>
+                            <select id="examGrade" required class="w-full p-3 rounded-lg bg-gray-800 border border-gray-600 focus:border-yellow-500 focus:outline-none">
+                                ${grades.map(g => `<option value="${g.id}" ${editingExam && g.id === editingExam.exam_grade ? 'selected' : ''}>${g.name}</option>`).join('')}
+                            </select>
+                        </div>
+                        
+                        <div class="border-t border-gray-600 pt-4">
+                            <div class="flex justify-between items-center mb-4">
+                                <h4 class="font-bold">الأسئلة</h4>
+                                <button type="button" onclick="addQuestion()" class="bg-green-600 hover:bg-green-700 px-3 py-1 rounded text-sm">+ سؤال جديد</button>
+                            </div>
+                            <div id="questionsContainer">
+                                ${examQuestions.map((q, i) => renderQuestionForm(q, i)).join('')}
+                            </div>
+                        </div>
+                        
+                        <div class="flex gap-2">
+                            <button type="submit" class="btn-gold px-6 py-2 rounded-lg font-bold">حفظ</button>
+                            <button type="button" onclick="hideExamForm()" class="bg-gray-600 hover:bg-gray-700 px-6 py-2 rounded-lg">إلغاء</button>
+                        </div>
+                    </form>
+                </div>
+            `;
+            
+            document.getElementById('examForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const title = document.getElementById('examTitle').value;
+                const grade = document.getElementById('examGrade').value;
+                
+                // Collect questions from form
+                collectQuestionsFromForm();
+                
+                if (examQuestions.length === 0) {
+                    showToast('يجب إضافة سؤال واحد على الأقل', 'error');
+                    return;
+                }
+                
+                if (editingExam) {
+                    editingExam.exam_title = title;
+                    editingExam.exam_grade = grade;
+                    editingExam.questions = JSON.stringify(examQuestions);
+                    
+                    const result = await window.dataSdk.update(editingExam);
+                    if (result.isOk) {
+                        showToast('تم تعديل الامتحان بنجاح');
+                        hideExamForm();
+                    } else {
+                        showToast('حدث خطأ', 'error');
+                    }
+                } else {
+                    if (allData.length >= 999) {
+                        showToast('تم الوصول للحد الأقصى من البيانات', 'error');
+                        return;
+                    }
+                    
+                    const result = await window.dataSdk.create({
+                        type: 'exam',
+                        exam_id: Date.now().toString(),
+                        exam_title: title,
+                        exam_grade: grade,
+                        questions: JSON.stringify(examQuestions),
+                        created_at: new Date().toISOString()
+                    });
+                    
+                    if (result.isOk) {
+                        showToast('تم إضافة الامتحان بنجاح');
+                        hideExamForm();
+                    } else {
+                        showToast('حدث خطأ', 'error');
+                    }
+                }
+            });
+        }
+
+        function renderQuestionForm(question, index) {
+            return `
+                <div class="bg-gray-800 p-4 rounded-lg mb-3" data-question-index="${index}">
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="font-bold">سؤال ${index + 1}</span>
+                        <button type="button" onclick="removeQuestion(${index})" class="text-red-400 hover:text-red-300">حذف</button>
+                    </div>
+                    <div class="space-y-3">
+                        <input type="text" class="question-text w-full p-2 rounded bg-gray-700 border border-gray-600" placeholder="نص السؤال" value="${question.text || ''}">
+                        <input type="text" class="question-opt1 w-full p-2 rounded bg-gray-700 border border-gray-600" placeholder="الإجابة الأولى" value="${question.options ? question.options[0] || '' : ''}">
+                        <input type="text" class="question-opt2 w-full p-2 rounded bg-gray-700 border border-gray-600" placeholder="الإجابة الثانية" value="${question.options ? question.options[1] || '' : ''}">
+                        <input type="text" class="question-opt3 w-full p-2 rounded bg-gray-700 border border-gray-600" placeholder="الإجابة الثالثة" value="${question.options ? question.options[2] || '' : ''}">
+                        <input type="text" class="question-opt4 w-full p-2 rounded bg-gray-700 border border-gray-600" placeholder="الإجابة الرابعة" value="${question.options ? question.options[3] || '' : ''}">
+                        <select class="question-correct w-full p-2 rounded bg-gray-700 border border-gray-600">
+                            <option value="">اختر الإجابة الصحيحة</option>
+                            <option value="0" ${question.correct === 0 ? 'selected' : ''}>الإجابة الأولى</option>
+                            <option value="1" ${question.correct === 1 ? 'selected' : ''}>الإجابة الثانية</option>
+                            <option value="2" ${question.correct === 2 ? 'selected' : ''}>الإجابة الثالثة</option>
+                            <option value="3" ${question.correct === 3 ? 'selected' : ''}>الإجابة الرابعة</option>
+                        </select>
+                    </div>
+                </div>
+            `;
+        }
+
+        function collectQuestionsFromForm() {
+            examQuestions = [];
+            const containers = document.querySelectorAll('[data-question-index]');
+            containers.forEach((container) => {
+                const text = container.querySelector('.question-text').value;
+                const opt1 = container.querySelector('.question-opt1').value;
+                const opt2 = container.querySelector('.question-opt2').value;
+                const opt3 = container.querySelector('.question-opt3').value;
+                const opt4 = container.querySelector('.question-opt4').value;
+                const correct = parseInt(container.querySelector('.question-correct').value);
+                
+                if (text && opt1 && opt2 && !isNaN(correct)) {
+                    examQuestions.push({
+                        text,
+                        options: [opt1, opt2, opt3, opt4].filter(o => o),
+                        correct
+                    });
+                }
+            });
+        }
+
+        window.addQuestion = function() {
+            collectQuestionsFromForm();
+            examQuestions.push({ text: '', options: ['', '', '', ''], correct: 0 });
+            const container = document.getElementById('questionsContainer');
+            container.innerHTML = examQuestions.map((q, i) => renderQuestionForm(q, i)).join('');
+        };
+
+        window.removeQuestion = function(index) {
+            collectQuestionsFromForm();
+            examQuestions.splice(index, 1);
+            const container = document.getElementById('questionsContainer');
+            container.innerHTML = examQuestions.map((q, i) => renderQuestionForm(q, i)).join('');
+        };
+
+        window.hideExamForm = function() {
+            examQuestions = [];
+            document.getElementById('examFormContainer').innerHTML = '';
+        };
+
+        window.editExam = function(id) {
+            const exam = allData.find(d => d.__backendId === id);
+            if (!exam) return;
+            
+            try {
+                examQuestions = JSON.parse(exam.questions || '[]');
+            } catch(e) {
+                examQuestions = [];
+            }
+            
+            renderExamForm(exam);
+        };
+
+        window.deleteExam = async function(id) {
+            const exam = allData.find(d => d.__backendId === id);
+            if (exam) {
+                const result = await window.dataSdk.delete(exam);
+                if (result.isOk) {
+                    showToast('تم حذف الامتحان');
+                } else {
+                    showToast('حدث خطأ', 'error');
+                }
+            }
+        };
+
+        window.viewExamResults = function(examId) {
+            const exam = allData.find(d => d.__backendId === examId);
+            const results = getExamResults().filter(r => r.exam_id === examId);
+            const students = getStudents();
+            
+            const modal = document.createElement('div');
+            modal.className = 'fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4';
+            modal.innerHTML = `
+                <div class="card-gradient p-6 rounded-xl max-w-2xl w-full max-h-[80%] overflow-y-auto">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-xl font-bold">نتائج: ${exam ? exam.exam_title : ''}</h3>
+                        <button onclick="this.closest('.fixed').remove()" class="text-gray-400 hover:text-white text-2xl">&times;</button>
+                    </div>
+                    ${results.length > 0 ? `
+                        <table class="w-full">
+                            <thead class="bg-gray-800">
+                                <tr>
+                                    <th class="p-3 text-right">الطالب</th>
+                                    <th class="p-3 text-right">الدرجة</th>
+                                    <th class="p-3 text-right">التاريخ</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${results.map(r => {
+                                    const student = students.find(s => s.__backendId === r.student_id);
+                                    return `
+                                        <tr class="border-b border-gray-700">
+                                            <td class="p-3">${student ? student.student_name : 'طالب محذوف'}</td>
+                                            <td class="p-3 ${r.exam_score >= 50 ? 'text-green-400' : 'text-red-400'}">${r.exam_score}%</td>
+                                            <td class="p-3">${new Date(r.created_at).toLocaleDateString('ar-EG')}</td>
+                                        </tr>
+                                    `;
+                                }).join('')}
+                            </tbody>
+                        </table>
+                    ` : '<p class="text-gray-400 text-center py-4">لا توجد نتائج بعد</p>'}
+                </div>
+            `;
+            document.body.appendChild(modal);
+        };
+
+        // Student Exam Functions
+        window.startExam = function(examId) {
+            const exam = allData.find(d => d.__backendId === examId);
+            if (!exam) return;
+            
+            let questions = [];
+            try { questions = JSON.parse(exam.questions || '[]'); } catch(e) {}
+            
+            if (questions.length === 0) {
+                showToast('هذا الامتحان فارغ', 'error');
+                return;
+            }
+            
+            const modal = document.createElement('div');
+            modal.className = 'fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50 p-4';
+            modal.id = 'examModal';
+            
+            let currentQuestion = 0;
+            let answers = new Array(questions.length).fill(null);
+            
+            function renderQuestion() {
+                const q = questions[currentQuestion];
+                modal.innerHTML = `
+                    <div class="card-gradient p-6 rounded-xl max-w-2xl w-full">
+                        <div class="flex justify-between items-center mb-6">
+                            <h3 class="text-xl font-bold">${exam.exam_title}</h3>
+                            <span class="text-gray-400">سؤال ${currentQuestion + 1} من ${questions.length}</span>
+                        </div>
+                        
+                        <div class="mb-6">
+                            <p class="text-xl mb-4">${q.text}</p>
+                            <div class="space-y-3">
+                                ${q.options.map((opt, i) => `
+                                    <button onclick="selectAnswer(${i})" class="w-full p-4 rounded-lg text-right ${answers[currentQuestion] === i ? 'bg-yellow-600' : 'bg-gray-800 hover:bg-gray-700'}">
+                                        ${opt}
+                                    </button>
+                                `).join('')}
+                            </div>
+                        </div>
+                        
+                        <div class="flex justify-between">
+                            ${currentQuestion > 0 ? `<button onclick="prevQuestion()" class="bg-gray-600 hover:bg-gray-700 px-6 py-2 rounded-lg">السابق</button>` : '<div></div>'}
+                            ${currentQuestion < questions.length - 1 ? 
+                                `<button onclick="nextQuestion()" class="btn-gold px-6 py-2 rounded-lg">التالي</button>` : 
+                                `<button onclick="submitExam()" class="bg-green-600 hover:bg-green-700 px-6 py-2 rounded-lg">إنهاء الامتحان</button>`
+                            }
+                        </div>
+                    </div>
+                `;
+            }
+            
+            window.selectAnswer = function(answerIndex) {
+                answers[currentQuestion] = answerIndex;
+                renderQuestion();
+            };
+            
+            window.nextQuestion = function() {
+                if (currentQuestion < questions.length - 1) {
+                    currentQuestion++;
+                    renderQuestion();
+                }
+            };
+            
+            window.prevQuestion = function() {
+                if (currentQuestion > 0) {
+                    currentQuestion--;
+                    renderQuestion();
+                }
+            };
+            
+            window.submitExam = async function() {
+                let correct = 0;
+                questions.forEach((q, i) => {
+                    if (answers[i] === q.correct) correct++;
+                });
+                
+                const score = Math.round((correct / questions.length) * 100);
+                
+                if (allData.length >= 999) {
+                    showToast('تم الوصول للحد الأقصى من البيانات', 'error');
+                    return;
+                }
+                
+                const result = await window.dataSdk.create({
+                    type: 'exam_result',
+                    exam_id: examId,
+                    student_id: currentUser.__backendId,
+                    exam_score: score,
+                    exam_answers: JSON.stringify(answers),
+                    created_at: new Date().toISOString()
+                });
+                
+                // Show results
+                modal.innerHTML = `
+                    <div class="card-gradient p-8 rounded-xl max-w-2xl w-full text-center">
+                        <div class="text-6xl mb-4">${score >= 50 ? '🎉' : '😔'}</div>
+                        <h3 class="text-2xl font-bold mb-4">نتيجتك</h3>
+                        <div class="text-5xl font-bold mb-4 ${score >= 50 ? 'text-green-400' : 'text-red-400'}">${score}%</div>
+                        <p class="text-gray-400 mb-6">أجبت على ${correct} من ${questions.length} أسئلة بشكل صحيح</p>
+                        
+                        <div class="space-y-4 text-right max-h-64 overflow-y-auto mb-6">
+                            ${questions.map((q, i) => `
+                                <div class="bg-gray-800 p-4 rounded-lg">
+                                    <p class="font-bold mb-2">${i + 1}. ${q.text}</p>
+                                    <p class="text-sm ${answers[i] === q.correct ? 'text-green-400' : 'text-red-400'}">
+                                        إجابتك: ${q.options[answers[i]] || 'لم تجب'}
+                                    </p>
+                                    ${answers[i] !== q.correct ? `<p class="text-sm text-green-400">الإجابة الصحيحة: ${q.options[q.correct]}</p>` : ''}
+                                </div>
+                            `).join('')}
+                        </div>
+                        
+                        <button onclick="document.getElementById('examModal').remove(); render();" class="btn-gold px-8 py-3 rounded-lg font-bold">إغلاق</button>
+                    </div>
+                `;
+            };
+            
+            document.body.appendChild(modal);
+            renderQuestion();
+        };
+
+        window.viewMyExamResult = function(examId) {
+            const exam = allData.find(d => d.__backendId === examId);
+            const result = getExamResults().find(r => r.exam_id === examId && r.student_id === currentUser.__backendId);
+            if (!exam || !result) return;
+            
+            let questions = [];
+            let answers = [];
+            try { 
+                questions = JSON.parse(exam.questions || '[]');
+                answers = JSON.parse(result.exam_answers || '[]');
+            } catch(e) {}
+            
+            const modal = document.createElement('div');
+            modal.className = 'fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4';
+            modal.innerHTML = `
+                <div class="card-gradient p-6 rounded-xl max-w-2xl w-full max-h-[90%] overflow-y-auto">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-xl font-bold">${exam.exam_title}</h3>
+                        <button onclick="this.closest('.fixed').remove()" class="text-gray-400 hover:text-white text-2xl">&times;</button>
+                    </div>
+                    
+                    <div class="text-center mb-6">
+                        <div class="text-4xl font-bold ${result.exam_score >= 50 ? 'text-green-400' : 'text-red-400'}">${result.exam_score}%</div>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        ${questions.map((q, i) => `
+                            <div class="bg-gray-800 p-4 rounded-lg">
+                                <p class="font-bold mb-2">${i + 1}. ${q.text}</p>
+                                <div class="space-y-2">
+                                    ${q.options.map((opt, j) => `
+                                        <div class="p-2 rounded ${j === q.correct ? 'bg-green-900 border border-green-500' : answers[i] === j && j !== q.correct ? 'bg-red-900 border border-red-500' : 'bg-gray-700'}">
+                                            ${opt}
+                                            ${j === q.correct ? ' ✓' : ''}
+                                            ${answers[i] === j && j !== q.correct ? ' ✗' : ''}
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        };
+
+        // Course Watching
+        window.watchCourse = async function(courseId) {
+            const course = allData.find(d => d.__backendId === courseId);
+            if (!course) return;
+            
+            // Record progress
+            let progress = getProgress().find(p => p.student_id === currentUser.__backendId && p.course_id === courseId);
+            
+            if (!progress) {
+                if (allData.length >= 999) {
+                    showToast('تم الوصول للحد الأقصى من البيانات', 'error');
+                    return;
+                }
+                await window.dataSdk.create({
+                    type: 'progress',
+                    student_id: currentUser.__backendId,
+                    course_id: courseId,
+                    video_opened: true,
+                    video_completed: false,
+                    created_at: new Date().toISOString()
+                });
+            }
+            
+            const modal = document.createElement('div');
+            modal.className = 'fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50 p-4';
+            modal.id = 'videoModal';
+            modal.innerHTML = `
+                <div class="card-gradient p-6 rounded-xl max-w-4xl w-full">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-xl font-bold">${course.course_title}</h3>
+                        <button onclick="document.getElementById('videoModal').remove()" class="text-gray-400 hover:text-white text-2xl">&times;</button>
+                    </div>
+                    
+                    ${course.video_url ? `
+                        <div class="aspect-video bg-gray-900 rounded-lg mb-4 flex items-center justify-center">
+                            <iframe src="${course.video_url}" class="w-full h-full rounded-lg" allowfullscreen></iframe>
+                        </div>
+                    ` : `
+                        <div class="aspect-video bg-gray-900 rounded-lg mb-4 flex items-center justify-center">
+                            <p class="text-gray-400">لا يوجد فيديو متاح</p>
+                        </div>
+                    `}
+                    
+                    <button onclick="markAsComplete('${courseId}')" class="btn-gold px-6 py-2 rounded-lg w-full">✓ تم الانتهاء من المشاهدة</button>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        };
+
+        window.markAsComplete = async function(courseId) {
+            let progress = getProgress().find(p => p.student_id === currentUser.__backendId && p.course_id === courseId);
+            if (progress) {
+                progress.video_completed = true;
+                await window.dataSdk.update(progress);
+                showToast('تم تسجيل إكمال الفيديو');
+            }
+            document.getElementById('videoModal').remove();
+            render();
+        };
+
+        // Event Listeners
+        function attachEventListeners() {
+            const loginForm = document.getElementById('loginForm');
+            if (loginForm) {
+                loginForm.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    const phone = document.getElementById('loginPhone').value;
+                    const password = document.getElementById('loginPassword').value;
+                    
+                    const student = getStudents().find(s => s.phone === phone && s.password === password);
+                    if (student) {
+                        currentUser = student;
+                        showToast('تم تسجيل الدخول بنجاح');
+                        render();
+                    } else {
+                        showToast('رقم الموبايل أو كلمة السر غير صحيحة', 'error');
+                    }
+                });
+            }
+            
+            const registerForm = document.getElementById('registerForm');
+            if (registerForm) {
+                registerForm.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    const name = document.getElementById('regName').value;
+                    const phone = document.getElementById('regPhone').value;
+                    const password = document.getElementById('regPassword').value;
+                    const grade = document.getElementById('regGrade').value;
+                    
+                    const existing = getStudents().find(s => s.phone === phone);
+                    if (existing) {
+                        showToast('رقم الموبايل مسجل مسبقاً', 'error');
+                        return;
+                    }
+                    
+                    if (allData.length >= 999) {
+                        showToast('تم الوصول للحد الأقصى من المستخدمين', 'error');
+                        return;
+                    }
+                    
+                    isLoading = true;
+                    render();
+                    
+                    const result = await window.dataSdk.create({
+                        type: 'student',
+                        student_name: name,
+                        phone: phone,
+                        password: password,
+                        grade: grade,
+                        status: 'pending',
+                        created_at: new Date().toISOString()
+                    });
+                    
+                    isLoading = false;
+                    
+                    if (result.isOk) {
+                        showToast('تم إرسال طلب التسجيل للمشرف');
+                        // Find the newly created student
+                        setTimeout(() => {
+                            const newStudent = getStudents().find(s => s.phone === phone);
+                            if (newStudent) {
+                                currentUser = newStudent;
+                                render();
+                            }
+                        }, 500);
+                    } else {
+                        showToast('حدث خطأ في التسجيل', 'error');
+                        render();
+                    }
+                });
+            }
+            
+            const adminLoginForm = document.getElementById('adminLoginForm');
+            if (adminLoginForm) {
+                adminLoginForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const email = document.getElementById('adminEmail').value;
+                    const password = document.getElementById('adminPassword').value;
+                    
+                    if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
+                        currentUser = { isAdmin: true };
+                        showToast('مرحباً بك في لوحة التحكم');
+                        render();
+                    } else {
+                        showToast('بيانات الدخول غير صحيحة', 'error');
+                    }
+                });
+            }
+        }
+
+        // Data Handler
+        const dataHandler = {
+            onDataChanged(data) {
+                allData = data;
+                
+                // Update current user if logged in
+                if (currentUser && !currentUser.isAdmin && currentUser.__backendId) {
+                    const updatedUser = data.find(d => d.__backendId === currentUser.__backendId);
+                    if (updatedUser) {
+                        currentUser = updatedUser;
+                    }
+                }
+                
+                render();
+            }
+        };
+
+        // Element SDK
+        const elementHandler = {
+            defaultConfig,
+            async onConfigChange(newConfig) {
+                config = { ...defaultConfig, ...newConfig };
+                render();
+            },
+            mapToCapabilities(cfg) {
+                return {
+                    recolorables: [
+                        {
+                            get: () => cfg.primary_color || defaultConfig.primary_color,
+                            set: (v) => { cfg.primary_color = v; window.elementSdk.setConfig({ primary_color: v }); }
+                        },
+                        {
+                            get: () => cfg.secondary_color || defaultConfig.secondary_color,
+                            set: (v) => { cfg.secondary_color = v; window.elementSdk.setConfig({ secondary_color: v }); }
+                        },
+                        {
+                            get: () => cfg.text_color || defaultConfig.text_color,
+                            set: (v) => { cfg.text_color = v; window.elementSdk.setConfig({ text_color: v }); }
+                        }
+                    ],
+                    borderables: [],
+                    fontEditable: undefined,
+                    fontSizeable: undefined
+                };
+            },
+            mapToEditPanelValues(cfg) {
+                return new Map([
+                    ['platform_name', cfg.platform_name || defaultConfig.platform_name],
+                    ['welcome_message', cfg.welcome_message || defaultConfig.welcome_message]
+                ]);
+            }
+        };
+
+        // Initialize
+        async function init() {
+            if (window.elementSdk) {
+                await window.elementSdk.init(elementHandler);
+                config = { ...defaultConfig, ...window.elementSdk.config };
+            }
+            
+            if (window.dataSdk) {
+                const result = await window.dataSdk.init(dataHandler);
+                if (!result.isOk) {
+                    console.error('Failed to initialize Data SDK');
+                }
+            }
+            
+            render();
+        }
+
+        init();
+    </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9c89b5e6a215e1e5',t:'MTc3MDIwMzMxMS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
