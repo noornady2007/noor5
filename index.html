@@ -3,520 +3,220 @@
  <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NOUR NADY - منصة التعلم</title>
+  <title>NOUR NADY - منصة الكورسات</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <!-- تمت إزالة الـ SDK القديمة واستبدالها بالكود المباشر في الأسفل -->
   <script src="/_sdk/element_sdk.js"></script>
-  <script src="/_sdk/data_sdk.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&amp;display=swap" rel="stylesheet">
   <style>
     body { box-sizing: border-box; }
     * { font-family: 'Cairo', sans-serif; }
-    
-    @keyframes float {
-      0%, 100% { transform: translateY(0px); }
-      50% { transform: translateY(-10px); }
-    }
-    
-    @keyframes pulse-gold {
-      0%, 100% { box-shadow: 0 0 20px rgba(212, 175, 55, 0.3); }
-      50% { box-shadow: 0 0 40px rgba(212, 175, 55, 0.6); }
-    }
-    
-    @keyframes slide-in {
-      from { opacity: 0; transform: translateX(-30px); }
-      to { opacity: 1; transform: translateX(0); }
-    }
-    
-    @keyframes fade-in {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    
-    .animate-float { animation: float 3s ease-in-out infinite; }
-    .animate-pulse-gold { animation: pulse-gold 2s ease-in-out infinite; }
-    .animate-slide-in { animation: slide-in 0.5s ease-out forwards; }
-    .animate-fade-in { animation: fade-in 0.5s ease-out forwards; }
-    
-    .gold-gradient {
-      background: linear-gradient(135deg, #D4AF37 0%, #F4E4BC 50%, #D4AF37 100%);
-    }
-    
-    .gold-text {
-      background: linear-gradient(135deg, #D4AF37 0%, #F4E4BC 50%, #D4AF37 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-    
-    .glass-card {
-      background: rgba(30, 30, 30, 0.8);
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(212, 175, 55, 0.2);
-    }
-    
-    .btn-gold {
-      background: linear-gradient(135deg, #D4AF37 0%, #B8960C 100%);
-      color: #000;
-      transition: all 0.3s ease;
-    }
-    
-    .btn-gold:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 10px 30px rgba(212, 175, 55, 0.4);
-    }
-    
-    .input-dark {
-      background: rgba(0, 0, 0, 0.5);
-      border: 1px solid rgba(212, 175, 55, 0.3);
-      color: #fff;
-      transition: all 0.3s ease;
-    }
-    
-    .input-dark:focus {
-      border-color: #D4AF37;
-      box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
-      outline: none;
-    }
-    
-    .sidebar-item {
-      transition: all 0.3s ease;
-    }
-    
-    .sidebar-item:hover, .sidebar-item.active {
-      background: rgba(212, 175, 55, 0.2);
-      border-right: 3px solid #D4AF37;
-    }
-    
-    .card-hover {
-      transition: all 0.3s ease;
-    }
-    
-    .card-hover:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 20px 40px rgba(212, 175, 55, 0.2);
-    }
-    
-    .toast {
-      position: fixed;
-      bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      padding: 15px 30px;
-      border-radius: 10px;
-      z-index: 9999;
-      animation: fade-in 0.3s ease-out;
-    }
-    
-    .toast-success { background: #10B981; color: #fff; }
-    .toast-error { background: #EF4444; color: #fff; }
-    .toast-info { background: #D4AF37; color: #000; }
-    
-    .modal-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.8);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 1000;
-    }
-    
-    .stars {
-      position: fixed;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      overflow: hidden;
-    }
-    
-    .star {
-      position: absolute;
-      width: 2px;
-      height: 2px;
-      background: #D4AF37;
-      border-radius: 50%;
-      animation: twinkle 2s infinite;
-    }
-    
-    @keyframes twinkle {
-      0%, 100% { opacity: 0.3; }
-      50% { opacity: 1; }
-    }
+    .gradient-bg { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%); }
+    .card-glass { background: rgba(255,255,255,0.05); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); }
+    .btn-primary { background: linear-gradient(135deg, #e94560 0%, #ff6b6b 100%); }
+    .btn-primary:hover { background: linear-gradient(135deg, #ff6b6b 0%, #e94560 100%); }
+    .input-style { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); }
+    .input-style:focus { border-color: #e94560; outline: none; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    .animate-fade { animation: fadeIn 0.5s ease-out; }
   </style>
   <style>@view-transition { navigation: auto; }</style>
  </head>
- <body class="h-full bg-black text-white overflow-auto">
-  <div id="stars" class="stars"></div><!-- Main App Container -->
-  <div id="app" class="h-full w-full"><!-- Loading Screen -->
-   <div id="loading-screen" class="h-full w-full flex items-center justify-center">
+ <body class="h-full gradient-bg text-white overflow-auto">
+  <div id="app" class="min-h-full w-full"><!-- Loading Screen -->
+   <div id="loading-screen" class="fixed inset-0 gradient-bg flex items-center justify-center z-50">
     <div class="text-center">
-     <div class="w-20 h-20 mx-auto mb-6 animate-float">
-      <svg viewbox="0 0 100 100" class="w-full h-full"><defs>
-        <lineargradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-         <stop offset="0%" style="stop-color:#D4AF37" />
-         <stop offset="50%" style="stop-color:#F4E4BC" />
-         <stop offset="100%" style="stop-color:#D4AF37" />
-        </lineargradient>
-       </defs> <circle cx="50" cy="50" r="45" fill="none" stroke="url(#goldGrad)" stroke-width="3" /> <text x="50" y="58" text-anchor="middle" fill="url(#goldGrad)" font-size="24" font-weight="bold">
-        NN
-       </text>
-      </svg>
-     </div>
-     <h2 class="gold-text text-2xl font-bold">NOUR NADY</h2>
-     <p class="text-gray-400 mt-2">جاري التحميل...</p>
+     <div class="w-16 h-16 border-4 border-t-pink-500 border-r-transparent border-b-pink-500 border-l-transparent rounded-full animate-spin mx-auto mb-4"></div>
+     <p class="text-xl">جاري الاتصال بقاعدة البيانات...</p>
     </div>
-   </div><!-- Login Selection Page -->
-   <div id="login-selection" class="h-full w-full hidden">
-    <div class="min-h-full flex flex-col items-center justify-center p-8">
-     <div class="animate-float mb-8">
-      <svg viewbox="0 0 120 120" class="w-32 h-32"><defs>
-        <lineargradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-         <stop offset="0%" style="stop-color:#D4AF37" />
-         <stop offset="50%" style="stop-color:#F4E4BC" />
-         <stop offset="100%" style="stop-color:#D4AF37" />
-        </lineargradient>
-       </defs> <circle cx="60" cy="60" r="55" fill="none" stroke="url(#logoGrad)" stroke-width="4" /> <text x="60" y="70" text-anchor="middle" fill="url(#logoGrad)" font-size="32" font-weight="bold">
-        NN
-       </text>
-      </svg>
+   </div><!-- Auth Page -->
+   <div id="auth-page" class="hidden min-h-full w-full p-4">
+    <div class="max-w-md mx-auto pt-10 animate-fade">
+     <div class="text-center mb-8">
+      <h1 id="main-title" class="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-red-500 mb-2">NOUR NADY</h1>
+      <p class="text-gray-400">منصة التعليم الإلكتروني</p>
      </div>
-     <h1 class="gold-text text-5xl font-black mb-4 animate-fade-in">NOUR NADY</h1>
-     <p class="text-gray-400 text-xl mb-12 animate-fade-in" style="animation-delay: 0.2s">منصة التعلم الإلكتروني</p>
-     <div class="flex flex-col sm:flex-row gap-6 animate-fade-in" style="animation-delay: 0.4s"><button onclick="showPage('student-login')" class="btn-gold px-12 py-4 rounded-xl font-bold text-lg animate-pulse-gold"> <span class="flex items-center gap-3">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-        </svg> دخول الطالب </span> </button> <button onclick="showPage('admin-login')" class="glass-card px-12 py-4 rounded-xl font-bold text-lg text-gold-400 hover:bg-opacity-50 transition-all"> <span class="flex items-center gap-3 gold-text">
-        <svg class="w-6 h-6" fill="none" stroke="#D4AF37" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-        </svg> دخول المشرف </span> </button>
-     </div>
-     <p class="text-gray-500 mt-12 text-sm">© 2024 NOUR NADY - جميع الحقوق محفوظة</p>
-    </div>
-   </div><!-- Student Login Page -->
-   <div id="student-login" class="h-full w-full hidden">
-    <div class="min-h-full flex items-center justify-center p-8">
-     <div class="glass-card rounded-3xl p-10 w-full max-w-md animate-fade-in"><button onclick="showPage('login-selection')" class="text-gray-400 hover:text-white mb-6 flex items-center gap-2">
-       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-       </svg> رجوع </button>
-      <div class="text-center mb-8">
-       <h2 class="gold-text text-3xl font-bold mb-2">تسجيل دخول الطالب</h2>
-       <p class="text-gray-400">أدخل بياناتك للوصول للكورسات</p>
-      </div>
-      <form id="student-login-form" onsubmit="handleStudentLogin(event)">
-       <div class="mb-6"><label for="student-phone-login" class="block text-gray-300 mb-2">رقم الموبايل</label> <input type="tel" id="student-phone-login" class="input-dark w-full px-4 py-3 rounded-xl" placeholder="01xxxxxxxxx" required>
+     <div class="card-glass rounded-2xl p-6">
+      <div class="flex mb-6"><button id="login-tab" onclick="showLoginForm()" class="flex-1 py-3 rounded-xl btn-primary text-white font-bold">تسجيل الدخول</button> <button id="register-tab" onclick="showRegisterForm()" class="flex-1 py-3 rounded-xl text-gray-400 font-bold mr-2">إنشاء حساب</button>
+      </div><!-- Login Form -->
+      <form id="login-form" onsubmit="handleLogin(event)">
+       <div class="mb-4"><label class="block mb-2 text-gray-300">رقم الموبايل</label> <input type="tel" id="login-phone" class="w-full p-4 rounded-xl input-style text-white" placeholder="01xxxxxxxxx" required>
        </div>
-       <div class="mb-6"><label for="student-password-login" class="block text-gray-300 mb-2">كلمة السر</label> <input type="password" id="student-password-login" class="input-dark w-full px-4 py-3 rounded-xl" placeholder="••••••••" required>
+       <div class="mb-6"><label class="block mb-2 text-gray-300">كلمة السر</label> <input type="password" id="login-password" class="w-full p-4 rounded-xl input-style text-white" placeholder="••••••••" required>
+       </div><button type="submit" id="login-btn" class="w-full py-4 rounded-xl btn-primary text-white font-bold text-lg">دخول</button>
+       <p id="login-error" class="text-red-400 text-center mt-4 hidden"></p>
+      </form><!-- Register Form -->
+      <form id="register-form" class="hidden" onsubmit="handleRegister(event)">
+       <div class="mb-4"><label class="block mb-2 text-gray-300">الاسم الكامل</label> <input type="text" id="reg-name" class="w-full p-4 rounded-xl input-style text-white" placeholder="أدخل اسمك" required>
        </div>
-       <div class="mb-6"><label class="flex items-center gap-2 text-gray-400 cursor-pointer"> <input type="checkbox" id="remember-student" class="w-4 h-4 accent-yellow-500" checked> <span>تذكرني</span> </label>
-       </div><button type="submit" class="btn-gold w-full py-4 rounded-xl font-bold text-lg"> تسجيل الدخول </button>
-      </form>
-      <div class="mt-6 text-center">
-       <p class="text-gray-400">ليس لديك حساب؟ <button onclick="showPage('student-register')" class="gold-text font-bold hover:underline">سجل الآن</button></p>
-      </div>
-     </div>
-    </div>
-   </div><!-- Student Registration Page -->
-   <div id="student-register" class="h-full w-full hidden overflow-auto">
-    <div class="min-h-full flex items-center justify-center p-8">
-     <div class="glass-card rounded-3xl p-10 w-full max-w-md animate-fade-in"><button onclick="showPage('student-login')" class="text-gray-400 hover:text-white mb-6 flex items-center gap-2">
-       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-       </svg> رجوع </button>
-      <div class="text-center mb-8">
-       <h2 class="gold-text text-3xl font-bold mb-2">إنشاء حساب جديد</h2>
-       <p class="text-gray-400">سجل الآن وابدأ رحلة التعلم</p>
-      </div>
-      <form id="student-register-form" onsubmit="handleStudentRegister(event)">
-       <div class="mb-5"><label for="student-name" class="block text-gray-300 mb-2">الاسم بالكامل</label> <input type="text" id="student-name" class="input-dark w-full px-4 py-3 rounded-xl" placeholder="أدخل اسمك" required>
+       <div class="mb-4"><label class="block mb-2 text-gray-300">رقم الموبايل</label> <input type="tel" id="reg-phone" class="w-full p-4 rounded-xl input-style text-white" placeholder="01xxxxxxxxx" required>
        </div>
-       <div class="mb-5"><label for="student-phone" class="block text-gray-300 mb-2">رقم الموبايل</label> <input type="tel" id="student-phone" class="input-dark w-full px-4 py-3 rounded-xl" placeholder="01xxxxxxxxx" required>
+       <div class="mb-4"><label class="block mb-2 text-gray-300">كلمة السر</label> <input type="password" id="reg-password" class="w-full p-4 rounded-xl input-style text-white" placeholder="••••••••" required>
        </div>
-       <div class="mb-5"><label for="student-password" class="block text-gray-300 mb-2">كلمة السر</label> <input type="password" id="student-password" class="input-dark w-full px-4 py-3 rounded-xl" placeholder="••••••••" required minlength="6">
-       </div>
-       <div class="mb-6"><label for="student-grade" class="block text-gray-300 mb-2">الصف الدراسي</label> <select id="student-grade" class="input-dark w-full px-4 py-3 rounded-xl" required> <option value="">اختر الصف</option> <option value="prep1">أولى إعدادي</option> <option value="prep2">تانية إعدادي</option> <option value="prep3">تالتة إعدادي</option> <option value="sec1">أولى ثانوي</option> <option value="sec2">تانية ثانوي</option> <option value="sec3">تالتة ثانوي</option> </select>
-       </div><button type="submit" class="btn-gold w-full py-4 rounded-xl font-bold text-lg"> إرسال طلب التسجيل </button>
-      </form>
-      <p class="text-gray-500 text-center mt-6 text-sm">* سيتم مراجعة طلبك من قبل المشرف</p>
-     </div>
-    </div>
-   </div><!-- Waiting Approval Page -->
-   <div id="waiting-approval" class="h-full w-full hidden">
-    <div class="min-h-full flex items-center justify-center p-8">
-     <div class="glass-card rounded-3xl p-10 w-full max-w-md text-center animate-fade-in">
-      <div class="w-24 h-24 mx-auto mb-6 animate-float">
-       <svg viewbox="0 0 100 100" class="w-full h-full"><circle cx="50" cy="50" r="45" fill="none" stroke="#D4AF37" stroke-width="3" stroke-dasharray="10 5" /> <text x="50" y="55" text-anchor="middle" fill="#D4AF37" font-size="30">
-         ⏳
-        </text>
-       </svg>
-      </div>
-      <h2 class="gold-text text-2xl font-bold mb-4">في انتظار الموافقة</h2>
-      <p class="text-gray-400 mb-6">تم إرسال طلب التسجيل الخاص بك.<br>
-       سيتم مراجعته من قبل المشرف قريباً.</p><button onclick="showPage('login-selection')" class="btn-gold px-8 py-3 rounded-xl font-bold"> العودة للرئيسية </button>
-     </div>
-    </div>
-   </div><!-- Admin Login Page -->
-   <div id="admin-login" class="h-full w-full hidden">
-    <div class="min-h-full flex items-center justify-center p-8">
-     <div class="glass-card rounded-3xl p-10 w-full max-w-md animate-fade-in"><button onclick="showPage('login-selection')" class="text-gray-400 hover:text-white mb-6 flex items-center gap-2">
-       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-       </svg> رجوع </button>
-      <div class="text-center mb-8">
-       <div class="w-16 h-16 mx-auto mb-4 gold-gradient rounded-full flex items-center justify-center">
-        <svg class="w-8 h-8 text-black" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-        </svg>
-       </div>
-       <h2 class="gold-text text-3xl font-bold mb-2">لوحة التحكم</h2>
-       <p class="text-gray-400">تسجيل دخول المشرف</p>
-      </div>
-      <form id="admin-login-form" onsubmit="handleAdminLogin(event)">
-       <div class="mb-6"><label for="admin-email" class="block text-gray-300 mb-2">البريد الإلكتروني</label> <input type="email" id="admin-email" class="input-dark w-full px-4 py-3 rounded-xl" placeholder="admin@example.com" required>
-       </div>
-       <div class="mb-6"><label for="admin-password" class="block text-gray-300 mb-2">كلمة السر</label> <input type="password" id="admin-password" class="input-dark w-full px-4 py-3 rounded-xl" placeholder="••••••••" required>
-       </div><button type="submit" class="btn-gold w-full py-4 rounded-xl font-bold text-lg"> دخول </button>
+       <div class="mb-6"><label class="block mb-2 text-gray-300">الصف الدراسي</label> <select id="reg-grade" class="w-full p-4 rounded-xl input-style text-white" required> <option value="">اختر الصف</option> <option value="prep1">أولى إعدادي</option> <option value="prep2">تانية إعدادي</option> <option value="prep3">تالتة إعدادي</option> <option value="sec1">أولى ثانوي</option> <option value="sec2">تانية ثانوي</option> <option value="sec3">تالتة ثانوي</option> </select>
+       </div><button type="submit" id="register-btn" class="w-full py-4 rounded-xl btn-primary text-white font-bold text-lg">إنشاء حساب</button>
+       <p id="register-error" class="text-red-400 text-center mt-4 hidden"></p>
+       <p id="register-success" class="text-green-400 text-center mt-4 hidden"></p>
       </form>
      </div>
     </div>
-   </div><!-- Student Dashboard -->
-   <div id="student-dashboard" class="h-full w-full hidden">
-    <div class="flex h-full"><!-- Sidebar -->
-     <aside class="w-64 glass-card hidden lg:block">
-      <div class="p-6 border-b border-gray-700">
-       <div class="flex items-center gap-3">
-        <div class="w-12 h-12 gold-gradient rounded-full flex items-center justify-center"><span class="text-black font-bold text-lg" id="student-avatar">ن</span>
-        </div>
-        <div>
-         <h3 class="font-bold text-white" id="student-name-display">الطالب</h3>
-         <p class="text-gray-400 text-sm" id="student-grade-display">الصف</p>
-        </div>
-       </div>
-      </div>
-      <nav class="p-4"><button onclick="showStudentSection('courses')" class="sidebar-item active w-full text-right px-4 py-3 rounded-lg mb-2 flex items-center gap-3">
-        <svg class="w-5 h-5 text-yellow-500" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-        </svg> الكورسات </button> <button onclick="showStudentSection('exams')" class="sidebar-item w-full text-right px-4 py-3 rounded-lg mb-2 flex items-center gap-3">
-        <svg class="w-5 h-5 text-yellow-500" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
-        </svg> الامتحانات </button> <button onclick="showStudentSection('results')" class="sidebar-item w-full text-right px-4 py-3 rounded-lg mb-2 flex items-center gap-3">
-        <svg class="w-5 h-5 text-yellow-500" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-        </svg> نتائجي </button>
-      </nav>
-      <div class="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-700"><button onclick="logoutStudent()" class="w-full px-4 py-3 rounded-lg text-red-400 hover:bg-red-500/20 flex items-center gap-3 justify-center">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-        </svg> تسجيل الخروج </button>
-      </div>
-     </aside><!-- Main Content -->
-     <main class="flex-1 overflow-auto"><!-- Mobile Header -->
-      <header class="lg:hidden glass-card p-4 flex items-center justify-between sticky top-0 z-50"><button onclick="toggleMobileMenu()" class="text-white p-2">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-        </svg></button>
-       <h1 class="gold-text font-bold">NOUR NADY</h1><button onclick="logoutStudent()" class="text-red-400 p-2">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-        </svg></button>
-      </header><!-- Courses Section -->
-      <section id="student-courses" class="p-6">
-       <h2 class="text-2xl font-bold mb-6 gold-text">الكورسات المتاحة</h2>
-       <div id="courses-grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6"><!-- Courses will be loaded here -->
-        <div class="text-center text-gray-400 col-span-full py-12">
-         <svg class="w-16 h-16 mx-auto mb-4 opacity-50" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-         </svg>
-         <p>لا توجد كورسات متاحة حالياً</p>
-        </div>
-       </div>
-      </section><!-- Exams Section -->
-      <section id="student-exams" class="p-6 hidden">
-       <h2 class="text-2xl font-bold mb-6 gold-text">الامتحانات المتاحة</h2>
-       <div id="exams-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6"><!-- Exams will be loaded here -->
-        <div class="text-center text-gray-400 col-span-full py-12">
-         <svg class="w-16 h-16 mx-auto mb-4 opacity-50" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-         </svg>
-         <p>لا توجد امتحانات متاحة حالياً</p>
-        </div>
-       </div>
-      </section><!-- Results Section -->
-      <section id="student-results" class="p-6 hidden">
-       <h2 class="text-2xl font-bold mb-6 gold-text">نتائجي</h2>
-       <div id="results-list" class="space-y-4"><!-- Results will be loaded here -->
-        <div class="text-center text-gray-400 py-12">
-         <svg class="w-16 h-16 mx-auto mb-4 opacity-50" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-         </svg>
-         <p>لا توجد نتائج بعد</p>
-        </div>
-       </div>
-      </section>
-     </main>
-    </div><!-- Mobile Menu -->
-    <div id="mobile-menu" class="fixed inset-0 bg-black/90 z-50 hidden lg:hidden">
-     <div class="glass-card h-full w-64 p-6"><button onclick="toggleMobileMenu()" class="absolute top-4 left-4 text-white">
-       <svg class="w-6 h-6" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-       </svg></button>
-      <div class="mt-12"><button onclick="showStudentSection('courses'); toggleMobileMenu();" class="w-full text-right px-4 py-3 rounded-lg mb-2 flex items-center gap-3 text-white hover:bg-yellow-500/20"> الكورسات </button> <button onclick="showStudentSection('exams'); toggleMobileMenu();" class="w-full text-right px-4 py-3 rounded-lg mb-2 flex items-center gap-3 text-white hover:bg-yellow-500/20"> الامتحانات </button> <button onclick="showStudentSection('results'); toggleMobileMenu();" class="w-full text-right px-4 py-3 rounded-lg mb-2 flex items-center gap-3 text-white hover:bg-yellow-500/20"> نتائجي </button>
+   </div><!-- Main Dashboard -->
+   <div id="dashboard" class="hidden min-h-full w-full"><!-- Header -->
+    <header class="card-glass p-4 sticky top-0 z-40">
+     <div class="max-w-6xl mx-auto flex justify-between items-center">
+      <h1 id="dash-title" class="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-red-500">NOUR NADY</h1>
+      <div class="flex items-center gap-4"><span id="user-name" class="text-gray-300"></span> <span id="user-grade" class="bg-pink-500 px-3 py-1 rounded-full text-sm"></span> <button onclick="logout()" class="bg-red-500/20 text-red-400 px-4 py-2 rounded-xl hover:bg-red-500/30">خروج</button>
       </div>
      </div>
+    </header><!-- Navigation -->
+    <nav class="max-w-6xl mx-auto p-4">
+     <div class="flex gap-2 overflow-x-auto pb-2"><button onclick="showSection('courses')" class="nav-btn active px-6 py-3 rounded-xl btn-primary text-white font-bold whitespace-nowrap" data-section="courses">📚 الكورسات</button> <button onclick="showSection('exams')" class="nav-btn px-6 py-3 rounded-xl card-glass text-gray-300 font-bold whitespace-nowrap" data-section="exams">📝 الامتحانات</button> <button onclick="showSection('results')" class="nav-btn px-6 py-3 rounded-xl card-glass text-gray-300 font-bold whitespace-nowrap" data-section="results">📊 نتائجي</button>
+     </div>
+    </nav><!-- Content Sections -->
+    <main class="max-w-6xl mx-auto p-4"><!-- Courses Section -->
+     <section id="courses-section" class="animate-fade">
+      <h2 class="text-2xl font-bold mb-6">📚 كورساتك</h2>
+      <div id="courses-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+       <p class="text-gray-400 col-span-full text-center py-10">لا توجد كورسات متاحة حالياً</p>
+      </div>
+     </section><!-- Exams Section -->
+     <section id="exams-section" class="hidden animate-fade">
+      <h2 class="text-2xl font-bold mb-6">📝 الامتحانات المتاحة</h2>
+      <div id="exams-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+       <p class="text-gray-400 col-span-full text-center py-10">لا توجد امتحانات متاحة حالياً</p>
+      </div>
+     </section><!-- Results Section -->
+     <section id="results-section" class="hidden animate-fade">
+      <h2 class="text-2xl font-bold mb-6">📊 نتائجي</h2>
+      <div id="results-list" class="space-y-4">
+       <p class="text-gray-400 text-center py-10">لم تقم بأي امتحان بعد</p>
+      </div>
+     </section>
+    </main>
+   </div><!-- Video Player Modal -->
+   <div id="video-modal" class="hidden fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4">
+    <div class="w-full max-w-4xl">
+     <div class="flex justify-between items-center mb-4">
+      <h3 id="video-title" class="text-xl font-bold"></h3><button onclick="closeVideo()" class="text-white text-3xl">×</button>
+     </div>
+     <div class="aspect-video bg-black rounded-xl overflow-hidden">
+      <video id="video-player" class="w-full h-full" controls></video>
+     </div>
     </div>
-   </div><!-- Admin Dashboard -->
-   <div id="admin-dashboard" class="h-full w-full hidden">
-    <div class="flex h-full"><!-- Admin Sidebar -->
-     <aside class="w-72 glass-card hidden lg:block relative">
-      <div class="p-6 border-b border-gray-700">
-       <div class="flex items-center gap-3">
-        <div class="w-12 h-12 gold-gradient rounded-full flex items-center justify-center">
-         <svg class="w-6 h-6 text-black" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-         </svg>
-        </div>
-        <div>
-         <h3 class="font-bold text-white">المشرف</h3>
-         <p class="text-gray-400 text-sm">لوحة التحكم</p>
-        </div>
-       </div>
+   </div><!-- Exam Modal -->
+   <div id="exam-modal" class="hidden fixed inset-0 bg-black/90 z-50 overflow-auto p-4">
+    <div class="max-w-2xl mx-auto my-8">
+     <div class="card-glass rounded-2xl p-6">
+      <div class="flex justify-between items-center mb-6">
+       <h3 id="exam-title" class="text-2xl font-bold"></h3><button onclick="closeExam()" class="text-white text-3xl">×</button>
       </div>
-      <nav class="p-4"><button onclick="showAdminSection('overview')" class="sidebar-item active w-full text-right px-4 py-3 rounded-lg mb-2 flex items-center gap-3" data-section="overview">
-        <svg class="w-5 h-5 text-yellow-500" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
-        </svg> نظرة عامة </button> <button onclick="showAdminSection('requests')" class="sidebar-item w-full text-right px-4 py-3 rounded-lg mb-2 flex items-center gap-3" data-section="requests">
-        <svg class="w-5 h-5 text-yellow-500" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
-        </svg> طلبات التسجيل <span id="requests-badge" class="bg-red-500 text-white text-xs px-2 py-1 rounded-full hidden">0</span> </button> <button onclick="showAdminSection('students')" class="sidebar-item w-full text-right px-4 py-3 rounded-lg mb-2 flex items-center gap-3" data-section="students">
-        <svg class="w-5 h-5 text-yellow-500" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
-        </svg> الطلاب </button> <button onclick="showAdminSection('courses-admin')" class="sidebar-item w-full text-right px-4 py-3 rounded-lg mb-2 flex items-center gap-3" data-section="courses-admin">
-        <svg class="w-5 h-5 text-yellow-500" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-        </svg> إدارة الكورسات </button> <button onclick="showAdminSection('exams-admin')" class="sidebar-item w-full text-right px-4 py-3 rounded-lg mb-2 flex items-center gap-3" data-section="exams-admin">
-        <svg class="w-5 h-5 text-yellow-500" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
-        </svg> إدارة الامتحانات </button> <button onclick="showAdminSection('analytics')" class="sidebar-item w-full text-right px-4 py-3 rounded-lg mb-2 flex items-center gap-3" data-section="analytics">
-        <svg class="w-5 h-5 text-yellow-500" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-        </svg> الإحصائيات </button>
-      </nav>
-      <div class="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-700"><button onclick="logoutAdmin()" class="w-full px-4 py-3 rounded-lg text-red-400 hover:bg-red-500/20 flex items-center gap-3 justify-center">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-        </svg> تسجيل الخروج </button>
+      <form id="exam-form" onsubmit="submitExam(event)">
+       <div id="questions-container"></div><button type="submit" class="w-full py-4 rounded-xl btn-primary text-white font-bold text-lg mt-6">تسليم الامتحان</button>
+      </form>
+     </div>
+    </div>
+   </div><!-- Result Modal -->
+   <div id="result-modal" class="hidden fixed inset-0 bg-black/90 z-50 overflow-auto p-4">
+    <div class="max-w-2xl mx-auto my-8">
+     <div class="card-glass rounded-2xl p-6">
+      <div class="flex justify-between items-center mb-6">
+       <h3 class="text-2xl font-bold">نتيجة الامتحان</h3><button onclick="closeResult()" class="text-white text-3xl">×</button>
       </div>
-     </aside><!-- Admin Main Content -->
-     <main class="flex-1 overflow-auto"><!-- Admin Mobile Header -->
-      <header class="lg:hidden glass-card p-4 flex items-center justify-between sticky top-0 z-50"><button onclick="toggleAdminMobileMenu()" class="text-white p-2">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-        </svg></button>
-       <h1 class="gold-text font-bold">لوحة التحكم</h1><button onclick="logoutAdmin()" class="text-red-400 p-2">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-        </svg></button>
-      </header><!-- Overview Section -->
-      <section id="admin-overview" class="p-6">
-       <h2 class="text-2xl font-bold mb-6 gold-text">نظرة عامة</h2>
-       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        <div class="glass-card rounded-2xl p-6 card-hover">
-         <div class="flex items-center justify-between mb-4">
-          <div class="w-12 h-12 bg-blue-500/20 rounded-xl flex items-center justify-center">
-           <svg class="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
-           </svg>
-          </div>
-         </div>
-         <h3 class="text-gray-400 text-sm">إجمالي الطلاب</h3>
-         <p class="text-3xl font-bold gold-text" id="total-students">0</p>
-        </div>
-        <div class="glass-card rounded-2xl p-6 card-hover">
-         <div class="flex items-center justify-between mb-4">
-          <div class="w-12 h-12 bg-green-500/20 rounded-xl flex items-center justify-center">
-           <svg class="w-6 h-6 text-green-400" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-           </svg>
-          </div>
-         </div>
-         <h3 class="text-gray-400 text-sm">الكورسات</h3>
-         <p class="text-3xl font-bold gold-text" id="total-courses">0</p>
-        </div>
-        <div class="glass-card rounded-2xl p-6 card-hover">
-         <div class="flex items-center justify-between mb-4">
-          <div class="w-12 h-12 bg-purple-500/20 rounded-xl flex items-center justify-center">
-           <svg class="w-6 h-6 text-purple-400" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-           </svg>
-          </div>
-         </div>
-         <h3 class="text-gray-400 text-sm">المشاهدات</h3>
-         <p class="text-3xl font-bold gold-text" id="total-views">0</p>
-        </div>
-        <div class="glass-card rounded-2xl p-6 card-hover">
-         <div class="flex items-center justify-between mb-4">
-          <div class="w-12 h-12 bg-yellow-500/20 rounded-xl flex items-center justify-center">
-           <svg class="w-6 h-6 text-yellow-400" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-           </svg>
-          </div>
-         </div>
-         <h3 class="text-gray-400 text-sm">مكتملة بالكامل</h3>
-         <p class="text-3xl font-bold gold-text" id="completed-views">0</p>
-        </div>
-       </div>
-       <div class="glass-card rounded-2xl p-6">
-        <h3 class="text-xl font-bold mb-4 gold-text">آخر الطلبات</h3>
-        <div id="recent-requests" class="space-y-3">
-         <p class="text-gray-400 text-center py-4">لا توجد طلبات جديدة</p>
-        </div>
-       </div>
-      </section><!-- Requests Section -->
-      <section id="admin-requests" class="p-6 hidden">
-       <h2 class="text-2xl font-bold mb-6 gold-text">طلبات التسجيل</h2>
-       <div id="requests-list" class="space-y-4">
-        <p class="text-gray-400 text-center py-12">لا توجد طلبات جديدة</p>
-       </div>
-      </section><!-- Students Section -->
-      <section id="admin-students" class="p-6 hidden">
-       <h2 class="text-2xl font-bold mb-6 gold-text">قائمة الطلاب</h2>
-       <div id="students-list" class="space-y-4">
-        <p class="text-gray-400 text-center py-12">لا يوجد طلاب مسجلين</p>
-       </div>
-      </section><!-- Courses Admin Section -->
-      <section id="admin-courses-admin" class="p-6 hidden">
-       <div class="flex items-center justify-between mb-6">
-        <h2 class="text-2xl font-bold gold-text">إدارة الكورسات</h2><button onclick="showAddCourseModal()" class="btn-gold px-6 py-3 rounded-xl font-bold flex items-center gap-2">
-         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-         </svg> إضافة كورس </button>
-       </div>
-       <div id="admin-courses-list" class="space-y-4">
-        <p class="text-gray-400 text-center py-12">لا توجد كورسات</p>
-       </div>
-      </section><!-- Exams Admin Section -->
-      <section id="admin-exams-admin" class="p-6 hidden">
-       <div class="flex items-center justify-between mb-6">
-        <h2 class="text-2xl font-bold gold-text">إدارة الامتحانات</h2><button onclick="showAddExamModal()" class="btn-gold px-6 py-3 rounded-xl font-bold flex items-center gap-2">
-         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-         </svg> إضافة امتحان </button>
-       </div>
-       <div id="admin-exams-list" class="space-y-4">
-        <p class="text-gray-400 text-center py-12">لا توجد امتحانات</p>
-       </div>
-      </section><!-- Analytics Section -->
-      <section id="admin-analytics" class="p-6 hidden">
-       <h2 class="text-2xl font-bold mb-6 gold-text">الإحصائيات</h2>
-       <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div class="glass-card rounded-2xl p-6">
-         <h3 class="text-lg font-bold mb-4 text-white">توزيع الطلاب حسب الصف</h3>
-         <div id="grade-distribution" class="space-y-3"><!-- Distribution will be loaded here -->
-         </div>
-        </div>
-        <div class="glass-card rounded-2xl p-6">
-         <h3 class="text-lg font-bold mb-4 text-white">إحصائيات المشاهدة</h3>
-         <div id="view-stats" class="space-y-3"><!-- Stats will be loaded here -->
-         </div>
-        </div>
-       </div>
-      </section>
-     </main>
-    </div><!-- Admin Mobile Menu -->
-    <div id="admin-mobile-menu" class="fixed inset-0 bg-black/90 z-50 hidden lg:hidden">
-     <div class="glass-card h-full w-64 p-6"><button onclick="toggleAdminMobileMenu()" class="absolute top-4 left-4 text-white">
-       <svg class="w-6 h-6" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-       </svg></button>
-      <div class="mt-12 space-y-2"><button onclick="showAdminSection('overview'); toggleAdminMobileMenu();" class="w-full text-right px-4 py-3 rounded-lg text-white hover:bg-yellow-500/20">نظرة عامة</button> <button onclick="showAdminSection('requests'); toggleAdminMobileMenu();" class="w-full text-right px-4 py-3 rounded-lg text-white hover:bg-yellow-500/20">طلبات التسجيل</button> <button onclick="showAdminSection('students'); toggleAdminMobileMenu();" class="w-full text-right px-4 py-3 rounded-lg text-white hover:bg-yellow-500/20">الطلاب</button> <button onclick="showAdminSection('courses-admin'); toggleAdminMobileMenu();" class="w-full text-right px-4 py-3 rounded-lg text-white hover:bg-yellow-500/20">إدارة الكورسات</button> <button onclick="showAdminSection('exams-admin'); toggleAdminMobileMenu();" class="w-full text-right px-4 py-3 rounded-lg text-white hover:bg-yellow-500/20">إدارة الامتحانات</button> <button onclick="showAdminSection('analytics'); toggleAdminMobileMenu();" class="w-full text-right px-4 py-3 rounded-lg text-white hover:bg-yellow-500/20">الإحصائيات</button>
-      </div>
+      <div id="result-content"></div>
      </div>
     </div>
    </div>
-  </div><!-- Modals Container -->
-  <div id="modals-container"></div><!-- Toast Container -->
-  <div id="toast-container"></div>
+  </div>
+  
+  <script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+  import { getFirestore, collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot, query, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+  import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+  
+  const firebaseConfig = {
+    apiKey: "AIzaSyDd1Z6tf88zho4j6gcf53TQz3yJmoQDpn8",
+    authDomain: "noor5-be881.firebaseapp.com",
+    projectId: "noor5-be881",
+    storageBucket: "noor5-be881.firebasestorage.app",
+    messagingSenderId: "310125450546",
+    appId: "1:310125450546:web:ff3cb7005f28a204f3732b",
+    measurementId: "G-RPQ7MNCS28"
+  };
+  
+  // تهيئة Firebase
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+  const auth = getAuth(app);
+  
+  // تسجيل دخول مجهول لضمان عمل قاعدة البيانات
+  signInAnonymously(auth).then(() => {
+    console.log("Connected to Firebase Auth");
+  }).catch((error) => {
+    console.error("Auth Error", error);
+  });
+  
+  // استبدال الـ SDK القديم بـ Firebase
+  window.dataSdk = {
+    async init(handler) {
+      const q = query(collection(db, "platform_data"));
+      onSnapshot(q, (snapshot) => {
+        const data = snapshot.docs.map(doc => ({
+          __backendId: doc.id,
+          ...doc.data()
+        }));
+        handler.onDataChanged(data);
+      });
+      return { isOk: true };
+    },
+    async create(data) {
+      try {
+        await addDoc(collection(db, "platform_data"), data);
+        return { isOk: true };
+      } catch (e) { 
+        console.error("Create Error", e);
+        return { isOk: false }; 
+      }
+    },
+    async update(data) {
+      try {
+        const id = data.__backendId;
+        const ref = doc(db, "platform_data", id);
+        const updateData = { ...data };
+        delete updateData.__backendId;
+        await updateDoc(ref, updateData);
+        return { isOk: true };
+      } catch (e) { return { isOk: false }; }
+    },
+    async delete(data) {
+      try {
+        await deleteDoc(doc(db, "platform_data", data.__backendId));
+        return { isOk: true };
+      } catch (e) { return { isOk: false }; }
+    }
+  };
+
+  // بدء التطبيق فقط بعد تهيئة Firebase
+  if (window.initApp) {
+    window.initApp();
+  }
+</script>  
+  
   <script>
-    // Global State
-    let allData = [];
-    let currentStudent = null;
-    let isAdmin = false;
+    /* DATABASE_STORAGE - جميع البيانات تُحفظ هنا في Canva Sheet */
+    /* يمكنك رؤية البيانات بالضغط على زر Data فوق الكود */
     
+    // Default Config
     const defaultConfig = {
-      platform_name: 'NOUR NADY'
+      site_title: 'NOUR NADY'
     };
-    
-    const GRADES = {
+
+    // App State
+    let currentUser = null;
+    let allData = [];
+    let currentExam = null;
+
+    // Grade Labels
+    const gradeLabels = {
       'prep1': 'أولى إعدادي',
       'prep2': 'تانية إعدادي',
       'prep3': 'تالتة إعدادي',
@@ -524,1483 +224,510 @@
       'sec2': 'تانية ثانوي',
       'sec3': 'تالتة ثانوي'
     };
-    
-    // Admin credentials (hashed for security)
-    const ADMIN_EMAIL = 'noornady00@gmail.com';
-    const ADMIN_PASSWORD_HASH = hashPassword('noornady2007');
-    
-    function hashPassword(password) {
-      let hash = 0;
-      for (let i = 0; i < password.length; i++) {
-        const char = password.charCodeAt(i);
-        hash = ((hash << 5) - hash) + char;
-        hash = hash & hash;
-      }
-      return hash.toString();
-    }
-    
-    // Create stars background
-    function createStars() {
-      const container = document.getElementById('stars');
-      for (let i = 0; i < 50; i++) {
-        const star = document.createElement('div');
-        star.className = 'star';
-        star.style.left = Math.random() * 100 + '%';
-        star.style.top = Math.random() * 100 + '%';
-        star.style.animationDelay = Math.random() * 2 + 's';
-        container.appendChild(star);
-      }
-    }
-    
-    // Toast notifications
-    function showToast(message, type = 'info') {
-      const container = document.getElementById('toast-container');
-      const toast = document.createElement('div');
-      toast.className = `toast toast-${type}`;
-      toast.textContent = message;
-      container.appendChild(toast);
-      setTimeout(() => toast.remove(), 3000);
-    }
-    
-    // Page navigation
-    function showPage(pageId) {
-      const pages = ['loading-screen', 'login-selection', 'student-login', 'student-register', 
-                     'waiting-approval', 'admin-login', 'student-dashboard', 'admin-dashboard'];
-      pages.forEach(p => {
-        const el = document.getElementById(p);
-        if (el) el.classList.add('hidden');
-      });
-      const target = document.getElementById(pageId);
-      if (target) target.classList.remove('hidden');
-    }
-    
-    // Student sections
-    function showStudentSection(section) {
-      const sections = ['courses', 'exams', 'results'];
-      sections.forEach(s => {
-        const el = document.getElementById('student-' + s);
-        if (el) el.classList.add('hidden');
-      });
-      const target = document.getElementById('student-' + section);
-      if (target) target.classList.remove('hidden');
-      
-      document.querySelectorAll('#student-dashboard .sidebar-item').forEach(item => {
-        item.classList.remove('active');
-      });
-    }
-    
-    // Admin sections
-    function showAdminSection(section) {
-      const sections = ['overview', 'requests', 'students', 'courses-admin', 'exams-admin', 'analytics'];
-      sections.forEach(s => {
-        const el = document.getElementById('admin-' + s);
-        if (el) el.classList.add('hidden');
-      });
-      const target = document.getElementById('admin-' + section);
-      if (target) target.classList.remove('hidden');
-      
-      document.querySelectorAll('#admin-dashboard .sidebar-item').forEach(item => {
-        item.classList.remove('active');
-        if (item.dataset.section === section) {
-          item.classList.add('active');
+
+    // Data Handler
+    const dataHandler = {
+      onDataChanged(data) {
+        /* DATABASE_STORAGE - البيانات المستلمة من قاعدة البيانات */
+        allData = data;
+        console.log('Data updated:', data.length, 'records');
+        
+        if (currentUser) {
+          renderCourses();
+          renderExams();
+          renderResults();
         }
+        
+        document.getElementById('loading-screen').classList.add('hidden');
+      }
+    };
+
+    // Initialize SDK
+    window.initApp = async function() {
+      try {
+        // ننتظر قليلاً للتأكد من تحميل dataSdk
+        if (!window.dataSdk) {
+           console.log("Waiting for Firebase...");
+           setTimeout(window.initApp, 500);
+           return;
+        }
+
+        const result = await window.dataSdk.init(dataHandler);
+        if (!result.isOk) {
+          console.error('Failed to init SDK');
+        }
+        
+        // Check saved session
+        const savedUser = localStorage.getItem('nour_nady_user');
+        if (savedUser) {
+          const userData = JSON.parse(savedUser);
+          const user = allData.find(d => d.type === 'student' && d.phone === userData.phone && d.status === 'approved');
+          if (user) {
+            currentUser = user;
+            showDashboard();
+          } else {
+            showAuthPage();
+          }
+        } else {
+          showAuthPage();
+        }
+      } catch (e) {
+        console.error('Init error:', e);
+        showAuthPage();
+      }
+    }
+
+    // Element SDK Init
+    if (window.elementSdk) {
+      window.elementSdk.init({
+        defaultConfig,
+        onConfigChange: async (config) => {
+          const title = config.site_title || defaultConfig.site_title;
+          const mainTitle = document.getElementById('main-title');
+          const dashTitle = document.getElementById('dash-title');
+          if (mainTitle) mainTitle.textContent = title;
+          if (dashTitle) dashTitle.textContent = title;
+        },
+        mapToCapabilities: (config) => ({
+          recolorables: [],
+          borderables: [],
+          fontEditable: undefined,
+          fontSizeable: undefined
+        }),
+        mapToEditPanelValues: (config) => new Map([
+          ['site_title', config.site_title || defaultConfig.site_title]
+        ])
       });
+    }
+
+    // Show/Hide Pages
+    function showAuthPage() {
+      document.getElementById('loading-screen').classList.add('hidden');
+      document.getElementById('auth-page').classList.remove('hidden');
+      document.getElementById('dashboard').classList.add('hidden');
+    }
+
+    function showDashboard() {
+      document.getElementById('loading-screen').classList.add('hidden');
+      document.getElementById('auth-page').classList.add('hidden');
+      document.getElementById('dashboard').classList.remove('hidden');
       
-      if (section === 'overview') updateOverviewStats();
-      if (section === 'requests') renderRequests();
-      if (section === 'students') renderStudents();
-      if (section === 'courses-admin') renderAdminCourses();
-      if (section === 'exams-admin') renderAdminExams();
-      if (section === 'analytics') renderAnalytics();
+      document.getElementById('user-name').textContent = currentUser.name;
+      document.getElementById('user-grade').textContent = gradeLabels[currentUser.grade] || currentUser.grade;
+      
+      renderCourses();
+      renderExams();
+      renderResults();
     }
-    
-    // Mobile menus
-    function toggleMobileMenu() {
-      document.getElementById('mobile-menu').classList.toggle('hidden');
+
+    // Auth Forms
+    function showLoginForm() {
+      document.getElementById('login-form').classList.remove('hidden');
+      document.getElementById('register-form').classList.add('hidden');
+      document.getElementById('login-tab').classList.add('btn-primary');
+      document.getElementById('login-tab').classList.remove('text-gray-400');
+      document.getElementById('register-tab').classList.remove('btn-primary');
+      document.getElementById('register-tab').classList.add('text-gray-400');
     }
-    
-    function toggleAdminMobileMenu() {
-      document.getElementById('admin-mobile-menu').classList.toggle('hidden');
+
+    function showRegisterForm() {
+      document.getElementById('login-form').classList.add('hidden');
+      document.getElementById('register-form').classList.remove('hidden');
+      document.getElementById('register-tab').classList.add('btn-primary');
+      document.getElementById('register-tab').classList.remove('text-gray-400');
+      document.getElementById('login-tab').classList.remove('btn-primary');
+      document.getElementById('login-tab').classList.add('text-gray-400');
     }
-    
-    // Data helpers
-    function getStudents() {
-      return allData.filter(d => d.type === 'student');
-    }
-    
-    function getCourses() {
-      return allData.filter(d => d.type === 'course');
-    }
-    
-    function getExams() {
-      return allData.filter(d => d.type === 'exam');
-    }
-    
-    function getResults() {
-      return allData.filter(d => d.type === 'result');
-    }
-    
-    function getVideoViews() {
-      return allData.filter(d => d.type === 'videoView');
-    }
-    
-    // Student Login
-    async function handleStudentLogin(e) {
+
+    // Handle Login
+    async function handleLogin(e) {
       e.preventDefault();
-      const phone = document.getElementById('student-phone-login').value.trim();
-      const password = document.getElementById('student-password-login').value;
-      const remember = document.getElementById('remember-student').checked;
+      const phone = document.getElementById('login-phone').value.trim();
+      const password = document.getElementById('login-password').value;
+      const errorEl = document.getElementById('login-error');
+      const btn = document.getElementById('login-btn');
       
-      const student = getStudents().find(s => s.studentPhone === phone);
+      btn.disabled = true;
+      btn.textContent = 'جاري التحقق...';
+      errorEl.classList.add('hidden');
+
+      /* DATABASE_STORAGE - البحث عن المستخدم في قاعدة البيانات */
+      const user = allData.find(d => d.type === 'student' && d.phone === phone && d.password === password);
       
-      if (!student) {
-        showToast('رقم الموبايل غير مسجل', 'error');
+      if (!user) {
+        errorEl.textContent = 'رقم الموبايل أو كلمة السر غير صحيحة';
+        errorEl.classList.remove('hidden');
+        btn.disabled = false;
+        btn.textContent = 'دخول';
         return;
       }
-      
-      if (student.studentPassword !== hashPassword(password)) {
-        showToast('كلمة السر غير صحيحة', 'error');
+
+      if (user.status === 'pending') {
+        errorEl.textContent = 'حسابك في انتظار موافقة المشرف';
+        errorEl.classList.remove('hidden');
+        btn.disabled = false;
+        btn.textContent = 'دخول';
         return;
       }
-      
-      if (student.studentStatus === 'pending') {
-        showToast('حسابك في انتظار موافقة المشرف', 'info');
-        showPage('waiting-approval');
+
+      if (user.status === 'rejected') {
+        errorEl.textContent = 'تم رفض طلب التسجيل';
+        errorEl.classList.remove('hidden');
+        btn.disabled = false;
+        btn.textContent = 'دخول';
         return;
       }
-      
-      if (student.studentStatus === 'rejected') {
-        showToast('تم رفض طلب التسجيل الخاص بك', 'error');
-        return;
-      }
-      
-      currentStudent = student;
-      
-      if (remember) {
-        localStorage.setItem('studentSession', JSON.stringify({
-          phone: phone,
-          password: hashPassword(password)
-        }));
-      }
-      
-      showToast('تم تسجيل الدخول بنجاح!', 'success');
-      showStudentDashboard();
+
+      currentUser = user;
+      localStorage.setItem('nour_nady_user', JSON.stringify({ phone: user.phone }));
+      btn.disabled = false;
+      btn.textContent = 'دخول';
+      showDashboard();
     }
-    
-    // Student Registration
-    async function handleStudentRegister(e) {
+
+    // Handle Register
+    async function handleRegister(e) {
       e.preventDefault();
-      
-      const name = document.getElementById('student-name').value.trim();
-      const phone = document.getElementById('student-phone').value.trim();
-      const password = document.getElementById('student-password').value;
-      const grade = document.getElementById('student-grade').value;
-      
-      const existingStudent = getStudents().find(s => s.studentPhone === phone);
-      if (existingStudent) {
-        showToast('رقم الموبايل مسجل بالفعل', 'error');
+      const name = document.getElementById('reg-name').value.trim();
+      const phone = document.getElementById('reg-phone').value.trim();
+      const password = document.getElementById('reg-password').value;
+      const grade = document.getElementById('reg-grade').value;
+      const errorEl = document.getElementById('register-error');
+      const successEl = document.getElementById('register-success');
+      const btn = document.getElementById('register-btn');
+
+      errorEl.classList.add('hidden');
+      successEl.classList.add('hidden');
+
+      if (!phone.match(/^01[0-9]{9}$/)) {
+        errorEl.textContent = 'رقم الموبايل غير صحيح';
+        errorEl.classList.remove('hidden');
         return;
       }
-      
-      if (allData.length >= 999) {
-        showToast('تم الوصول للحد الأقصى من البيانات', 'error');
+
+      /* DATABASE_STORAGE - التحقق من وجود الرقم */
+      const exists = allData.find(d => d.type === 'student' && d.phone === phone);
+      if (exists) {
+        errorEl.textContent = 'هذا الرقم مسجل بالفعل';
+        errorEl.classList.remove('hidden');
         return;
       }
-      
+
+      // Check limit
+      const studentCount = allData.filter(d => d.type === 'student').length;
+      if (studentCount >= 999) {
+        errorEl.textContent = 'عذراً، المنصة ممتلئة حالياً';
+        errorEl.classList.remove('hidden');
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = 'جاري التسجيل...';
+
+      /* DATABASE_STORAGE - حفظ بيانات الطالب الجديد */
       const result = await window.dataSdk.create({
         type: 'student',
-        studentName: name,
-        studentPhone: phone,
-        studentPassword: hashPassword(password),
-        studentGrade: grade,
-        studentStatus: 'pending',
+        phone: phone,
+        password: password,
+        name: name,
+        grade: grade,
+        status: 'pending',
         createdAt: new Date().toISOString()
       });
-      
+
+      btn.disabled = false;
+      btn.textContent = 'إنشاء حساب';
+
       if (result.isOk) {
-        showToast('تم إرسال طلب التسجيل بنجاح!', 'success');
-        showPage('waiting-approval');
+        successEl.textContent = 'تم إرسال طلب التسجيل! في انتظار موافقة المشرف';
+        successEl.classList.remove('hidden');
+        document.getElementById('register-form').reset();
       } else {
-        showToast('حدث خطأ، حاول مرة أخرى', 'error');
+        errorEl.textContent = 'حدث خطأ، حاول مرة أخرى';
+        errorEl.classList.remove('hidden');
       }
     }
-    
-    // Admin Login
-    async function handleAdminLogin(e) {
-      e.preventDefault();
-      const email = document.getElementById('admin-email').value.trim();
-      const password = document.getElementById('admin-password').value;
+
+    // Logout
+    function logout() {
+      currentUser = null;
+      localStorage.removeItem('nour_nady_user');
+      showAuthPage();
+    }
+
+    // Navigation
+    function showSection(section) {
+      const sections = ['courses', 'exams', 'results'];
+      sections.forEach(s => {
+        document.getElementById(s + '-section').classList.toggle('hidden', s !== section);
+      });
       
-      if (email === ADMIN_EMAIL && hashPassword(password) === ADMIN_PASSWORD_HASH) {
-        isAdmin = true;
-        localStorage.setItem('adminSession', 'true');
-        showToast('مرحباً بك في لوحة التحكم!', 'success');
-        showPage('admin-dashboard');
-        showAdminSection('overview');
-      } else {
-        showToast('بيانات الدخول غير صحيحة', 'error');
-      }
+      document.querySelectorAll('.nav-btn').forEach(btn => {
+        if (btn.dataset.section === section) {
+          btn.classList.add('btn-primary');
+          btn.classList.remove('card-glass', 'text-gray-300');
+          btn.classList.add('text-white');
+        } else {
+          btn.classList.remove('btn-primary', 'text-white');
+          btn.classList.add('card-glass', 'text-gray-300');
+        }
+      });
     }
-    
-    // Logout functions
-    function logoutStudent() {
-      currentStudent = null;
-      localStorage.removeItem('studentSession');
-      showToast('تم تسجيل الخروج', 'info');
-      showPage('login-selection');
-    }
-    
-    function logoutAdmin() {
-      isAdmin = false;
-      localStorage.removeItem('adminSession');
-      showToast('تم تسجيل الخروج', 'info');
-      showPage('login-selection');
-    }
-    
-    // Show student dashboard
-    function showStudentDashboard() {
-      if (!currentStudent) return;
-      
-      document.getElementById('student-name-display').textContent = currentStudent.studentName;
-      document.getElementById('student-grade-display').textContent = GRADES[currentStudent.studentGrade] || currentStudent.studentGrade;
-      document.getElementById('student-avatar').textContent = currentStudent.studentName.charAt(0);
-      
-      showPage('student-dashboard');
-      renderStudentCourses();
-      renderStudentExams();
-      renderStudentResults();
-    }
-    
-    // Render student courses
-    function renderStudentCourses() {
-      const container = document.getElementById('courses-grid');
-      const courses = getCourses().filter(c => c.courseGrade === currentStudent.studentGrade);
+
+    // Render Courses
+    function renderCourses() {
+      const grid = document.getElementById('courses-grid');
+      /* DATABASE_STORAGE - جلب الكورسات المتاحة للصف */
+      const courses = allData.filter(d => d.type === 'course' && d.courseGrade === currentUser.grade);
       
       if (courses.length === 0) {
-        container.innerHTML = `
-          <div class="text-center text-gray-400 col-span-full py-12">
-            <svg class="w-16 h-16 mx-auto mb-4 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
-            </svg>
-            <p>لا توجد كورسات متاحة لصفك حالياً</p>
-          </div>`;
+        grid.innerHTML = '<p class="text-gray-400 col-span-full text-center py-10">لا توجد كورسات متاحة حالياً</p>';
         return;
       }
-      
-      container.innerHTML = courses.map(course => `
-        <div class="glass-card rounded-2xl overflow-hidden card-hover animate-fade-in">
-          <div class="h-40 gold-gradient flex items-center justify-center">
-            <svg class="w-16 h-16 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/>
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-            </svg>
+
+      grid.innerHTML = courses.map(course => `
+        <div class="card-glass rounded-2xl overflow-hidden hover:scale-105 transition-transform cursor-pointer" onclick="openVideo('${course.__backendId}', '${encodeURIComponent(course.courseName)}', '${encodeURIComponent(course.videoUrl || '')}')">
+          <div class="aspect-video bg-gradient-to-br from-pink-500/20 to-purple-500/20 flex items-center justify-center">
+            <span class="text-6xl">🎬</span>
           </div>
-          <div class="p-5">
-            <h3 class="text-lg font-bold text-white mb-2">${course.courseName}</h3>
-            <p class="text-gray-400 text-sm mb-4">${course.courseDescription || 'لا يوجد وصف'}</p>
-            <button onclick="watchCourse('${course.__backendId}')" class="btn-gold w-full py-3 rounded-xl font-bold">
-              مشاهدة الكورس
-            </button>
+          <div class="p-4">
+            <h3 class="font-bold text-lg mb-2">${course.courseName}</h3>
+            <p class="text-gray-400 text-sm">${gradeLabels[course.courseGrade] || course.courseGrade}</p>
           </div>
         </div>
       `).join('');
     }
-    
-    // Watch course
-    async function watchCourse(courseId) {
-      const course = getCourses().find(c => c.__backendId === courseId);
-      if (!course || !course.courseVideoUrl) {
-        showToast('لا يوجد فيديو متاح', 'error');
+
+    // Open Video
+    async function openVideo(courseId, name, url) {
+      const videoUrl = decodeURIComponent(url);
+      const videoName = decodeURIComponent(name);
+      
+      if (!videoUrl) {
         return;
       }
-      
-      // Record view
-      if (allData.length < 999) {
+
+      document.getElementById('video-title').textContent = videoName;
+      document.getElementById('video-player').src = videoUrl;
+      document.getElementById('video-modal').classList.remove('hidden');
+
+      /* DATABASE_STORAGE - تسجيل مشاهدة الفيديو */
+      const watchCount = allData.filter(d => d.type === 'watch').length;
+      if (watchCount < 999) {
         await window.dataSdk.create({
-          type: 'videoView',
-          videoViewStudentPhone: currentStudent.studentPhone,
-          videoViewCourseId: courseId,
-          videoViewCompleted: 'false',
+          type: 'watch',
+          courseId: courseId,
+          studentPhone: currentUser.phone,
+          watchedFull: false,
           createdAt: new Date().toISOString()
         });
       }
-      
-      showVideoModal(course);
+
+      // Track video end
+      const videoEl = document.getElementById('video-player');
+      videoEl.onended = async () => {
+        /* DATABASE_STORAGE - تحديث حالة المشاهدة الكاملة */
+        const watch = allData.find(d => d.type === 'watch' && d.courseId === courseId && d.studentPhone === currentUser.phone && !d.watchedFull);
+        if (watch) {
+          await window.dataSdk.update({ ...watch, watchedFull: true });
+        }
+      };
     }
-    
-    // Show video modal
-    function showVideoModal(course) {
-      const modal = document.createElement('div');
-      modal.className = 'modal-overlay';
-      modal.id = 'video-modal';
-      modal.innerHTML = `
-        <div class="glass-card rounded-3xl w-full max-w-4xl mx-4 overflow-hidden animate-fade-in">
-          <div class="p-4 border-b border-gray-700 flex items-center justify-between">
-            <h3 class="text-xl font-bold gold-text">${course.courseName}</h3>
-            <button onclick="closeVideoModal('${course.__backendId}')" class="text-gray-400 hover:text-white">
-              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-              </svg>
-            </button>
-          </div>
-          <div class="aspect-video bg-black">
-            <iframe src="${course.courseVideoUrl}" class="w-full h-full" allowfullscreen id="course-video-iframe"></iframe>
-          </div>
-          <div class="p-4 flex justify-center">
-            <button onclick="markVideoComplete('${course.__backendId}')" class="btn-gold px-8 py-3 rounded-xl font-bold">
-              تم مشاهدة الفيديو بالكامل ✓
-            </button>
-          </div>
-        </div>
-      `;
-      document.getElementById('modals-container').appendChild(modal);
+
+    function closeVideo() {
+      document.getElementById('video-modal').classList.add('hidden');
+      document.getElementById('video-player').pause();
+      document.getElementById('video-player').src = '';
     }
-    
-    async function closeVideoModal(courseId) {
-      const modal = document.getElementById('video-modal');
-      if (modal) modal.remove();
-    }
-    
-    async function markVideoComplete(courseId) {
-      const existingView = getVideoViews().find(v => 
-        v.videoViewStudentPhone === currentStudent.studentPhone && 
-        v.videoViewCourseId === courseId
-      );
-      
-      if (existingView && existingView.videoViewCompleted !== 'true') {
-        await window.dataSdk.update({
-          ...existingView,
-          videoViewCompleted: 'true'
-        });
-        showToast('تم تسجيل إكمال الفيديو!', 'success');
-      }
-      
-      closeVideoModal(courseId);
-    }
-    
-    // Render student exams
-    function renderStudentExams() {
-      const container = document.getElementById('exams-grid');
-      const exams = getExams().filter(e => e.examGrade === currentStudent.studentGrade);
+
+    // Render Exams
+    function renderExams() {
+      const grid = document.getElementById('exams-grid');
+      /* DATABASE_STORAGE - جلب الامتحانات المتاحة للصف */
+      const exams = allData.filter(d => d.type === 'exam' && d.courseGrade === currentUser.grade);
       
       if (exams.length === 0) {
-        container.innerHTML = `
-          <div class="text-center text-gray-400 col-span-full py-12">
-            <svg class="w-16 h-16 mx-auto mb-4 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
-            </svg>
-            <p>لا توجد امتحانات متاحة لصفك حالياً</p>
-          </div>`;
+        grid.innerHTML = '<p class="text-gray-400 col-span-full text-center py-10">لا توجد امتحانات متاحة حالياً</p>';
         return;
       }
-      
-      container.innerHTML = exams.map(exam => {
-        const questions = JSON.parse(exam.examQuestions || '[]');
-        const existingResult = getResults().find(r => 
-          r.resultStudentPhone === currentStudent.studentPhone && 
-          r.resultExamId === exam.__backendId
-        );
-        
-        return `
-          <div class="glass-card rounded-2xl p-6 card-hover animate-fade-in">
-            <div class="flex items-center gap-4 mb-4">
-              <div class="w-14 h-14 gold-gradient rounded-xl flex items-center justify-center">
-                <svg class="w-7 h-7 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
-                </svg>
-              </div>
-              <div>
-                <h3 class="text-lg font-bold text-white">${exam.examTitle}</h3>
-                <p class="text-gray-400 text-sm">${questions.length} سؤال</p>
-              </div>
+
+      // Group exams by examId
+      const examGroups = {};
+      exams.forEach(q => {
+        if (!examGroups[q.examId]) {
+          examGroups[q.examId] = { name: q.courseName, grade: q.courseGrade, questions: [] };
+        }
+        examGroups[q.examId].questions.push(q);
+      });
+
+      grid.innerHTML = Object.entries(examGroups).map(([examId, exam]) => `
+        <div class="card-glass rounded-2xl p-6 hover:scale-105 transition-transform cursor-pointer" onclick="startExam('${examId}')">
+          <div class="flex items-center gap-4 mb-4">
+            <span class="text-4xl">📝</span>
+            <div>
+              <h3 class="font-bold text-lg">${exam.name}</h3>
+              <p class="text-gray-400 text-sm">${exam.questions.length} سؤال</p>
             </div>
-            ${existingResult ? `
-              <div class="bg-green-500/20 text-green-400 px-4 py-2 rounded-lg text-center">
-                تم حل الامتحان - الدرجة: ${existingResult.resultScore}
-              </div>
-            ` : `
-              <button onclick="startExam('${exam.__backendId}')" class="btn-gold w-full py-3 rounded-xl font-bold">
-                ابدأ الامتحان
-              </button>
-            `}
+          </div>
+          <p class="text-gray-400 text-sm">${gradeLabels[exam.grade] || exam.grade}</p>
+        </div>
+      `).join('');
+    }
+
+    // Start Exam
+    function startExam(examId) {
+      /* DATABASE_STORAGE - جلب أسئلة الامتحان */
+      const questions = allData.filter(d => d.type === 'exam' && d.examId === examId);
+      if (questions.length === 0) return;
+
+      currentExam = { examId, questions };
+      document.getElementById('exam-title').textContent = questions[0].courseName;
+      
+      const container = document.getElementById('questions-container');
+      container.innerHTML = questions.map((q, i) => {
+        const options = JSON.parse(q.options || '[]');
+        return `
+          <div class="mb-6 p-4 card-glass rounded-xl">
+            <p class="font-bold mb-4">${i + 1}. ${q.questionText}</p>
+            <div class="space-y-2">
+              ${options.map((opt, j) => `
+                <label class="flex items-center gap-3 p-3 rounded-lg hover:bg-white/10 cursor-pointer">
+                  <input type="radio" name="q${i}" value="${j}" class="w-5 h-5 accent-pink-500" required>
+                  <span>${opt}</span>
+                </label>
+              `).join('')}
+            </div>
           </div>
         `;
       }).join('');
+
+      document.getElementById('exam-modal').classList.remove('hidden');
     }
-    
-    // Start exam
-    function startExam(examId) {
-      const exam = getExams().find(e => e.__backendId === examId);
-      if (!exam) return;
-      
-      const questions = JSON.parse(exam.examQuestions || '[]');
-      if (questions.length === 0) {
-        showToast('لا توجد أسئلة في هذا الامتحان', 'error');
-        return;
-      }
-      
-      showExamModal(exam, questions);
+
+    function closeExam() {
+      document.getElementById('exam-modal').classList.add('hidden');
+      currentExam = null;
     }
-    
-    // Show exam modal
-    function showExamModal(exam, questions) {
-      const modal = document.createElement('div');
-      modal.className = 'modal-overlay';
-      modal.id = 'exam-modal';
-      modal.innerHTML = `
-        <div class="glass-card rounded-3xl w-full max-w-2xl mx-4 max-h-[90%] overflow-auto animate-fade-in">
-          <div class="p-6 border-b border-gray-700 sticky top-0 bg-gray-900/95">
-            <h3 class="text-xl font-bold gold-text">${exam.examTitle}</h3>
-          </div>
-          <form id="exam-form" onsubmit="submitExam(event, '${exam.__backendId}')" class="p-6">
-            ${questions.map((q, i) => `
-              <div class="mb-8">
-                <h4 class="text-lg font-bold text-white mb-4">${i + 1}. ${q.question}</h4>
-                <div class="space-y-3">
-                  ${q.options.map((opt, j) => `
-                    <label class="flex items-center gap-3 p-3 glass-card rounded-xl cursor-pointer hover:bg-yellow-500/10 transition-all">
-                      <input type="radio" name="q${i}" value="${j}" required class="w-5 h-5 accent-yellow-500">
-                      <span class="text-gray-300">${opt}</span>
-                    </label>
-                  `).join('')}
-                </div>
-              </div>
-            `).join('')}
-            <div class="flex gap-4">
-              <button type="submit" class="btn-gold flex-1 py-4 rounded-xl font-bold text-lg">
-                إرسال الإجابات
-              </button>
-              <button type="button" onclick="closeExamModal()" class="glass-card flex-1 py-4 rounded-xl font-bold text-lg text-gray-300 hover:bg-red-500/20">
-                إلغاء
-              </button>
-            </div>
-          </form>
-        </div>
-      `;
-      document.getElementById('modals-container').appendChild(modal);
-    }
-    
-    function closeExamModal() {
-      const modal = document.getElementById('exam-modal');
-      if (modal) modal.remove();
-    }
-    
-    // Submit exam
-    async function submitExam(e, examId) {
+
+    // Submit Exam
+    async function submitExam(e) {
       e.preventDefault();
-      
-      const exam = getExams().find(ex => ex.__backendId === examId);
-      if (!exam) return;
-      
-      const questions = JSON.parse(exam.examQuestions || '[]');
-      const form = document.getElementById('exam-form');
-      const formData = new FormData(form);
-      
+      if (!currentExam) return;
+
       let correct = 0;
       const answers = [];
-      
-      questions.forEach((q, i) => {
-        const answer = formData.get(`q${i}`);
-        const isCorrect = parseInt(answer) === q.correctAnswer;
+      const results = [];
+
+      currentExam.questions.forEach((q, i) => {
+        const selected = document.querySelector(`input[name="q${i}"]:checked`);
+        const selectedIndex = selected ? parseInt(selected.value) : -1;
+        const correctIndex = parseInt(q.correctAnswer);
+        const isCorrect = selectedIndex === correctIndex;
+        
         if (isCorrect) correct++;
-        answers.push({
-          question: q.question,
-          userAnswer: parseInt(answer),
-          correctAnswer: q.correctAnswer,
+        
+        const options = JSON.parse(q.options || '[]');
+        answers.push(selectedIndex);
+        results.push({
+          question: q.questionText,
+          options: options,
+          selected: selectedIndex,
+          correct: correctIndex,
           isCorrect: isCorrect
         });
       });
-      
-      const score = `${correct}/${questions.length}`;
-      
-      if (allData.length < 999) {
-        const result = await window.dataSdk.create({
+
+      const score = Math.round((correct / currentExam.questions.length) * 100);
+
+      /* DATABASE_STORAGE - حفظ نتيجة الامتحان */
+      const resultCount = allData.filter(d => d.type === 'result').length;
+      if (resultCount < 999) {
+        await window.dataSdk.create({
           type: 'result',
-          resultStudentPhone: currentStudent.studentPhone,
-          resultExamId: examId,
-          resultScore: score,
-          resultAnswers: JSON.stringify(answers),
+          examId: currentExam.examId,
+          studentPhone: currentUser.phone,
+          score: score,
+          totalQuestions: currentExam.questions.length,
+          answers: JSON.stringify(answers),
           createdAt: new Date().toISOString()
         });
-        
-        if (result.isOk) {
-          closeExamModal();
-          showResultModal(exam.examTitle, score, answers);
-          renderStudentExams();
-          renderStudentResults();
-        }
       }
+
+      // Show result
+      closeExam();
+      showExamResult(score, correct, currentExam.questions.length, results);
     }
-    
-    // Show result modal
-    function showResultModal(examTitle, score, answers) {
-      const [correct, total] = score.split('/').map(Number);
-      const percentage = Math.round((correct / total) * 100);
+
+    // Show Exam Result
+    function showExamResult(score, correct, total, results) {
+      const content = document.getElementById('result-content');
       
-      const modal = document.createElement('div');
-      modal.className = 'modal-overlay';
-      modal.id = 'result-modal';
-      modal.innerHTML = `
-        <div class="glass-card rounded-3xl w-full max-w-2xl mx-4 max-h-[90%] overflow-auto animate-fade-in">
-          <div class="p-6 text-center border-b border-gray-700">
-            <div class="w-24 h-24 mx-auto mb-4 ${percentage >= 50 ? 'bg-green-500/20' : 'bg-red-500/20'} rounded-full flex items-center justify-center">
-              <span class="text-4xl font-bold ${percentage >= 50 ? 'text-green-400' : 'text-red-400'}">${percentage}%</span>
-            </div>
-            <h3 class="text-2xl font-bold gold-text">${examTitle}</h3>
-            <p class="text-xl text-white mt-2">درجتك: ${score}</p>
-          </div>
-          <div class="p-6 space-y-4">
-            <h4 class="text-lg font-bold text-white mb-4">مراجعة الإجابات:</h4>
-            ${answers.map((a, i) => `
-              <div class="glass-card rounded-xl p-4 ${a.isCorrect ? 'border-green-500/30' : 'border-red-500/30'} border">
-                <p class="font-bold text-white mb-2">${i + 1}. ${a.question}</p>
-                <div class="flex items-center gap-2 ${a.isCorrect ? 'text-green-400' : 'text-red-400'}">
-                  <span>${a.isCorrect ? '✓ إجابة صحيحة' : '✗ إجابة خاطئة'}</span>
-                </div>
+      const scoreColor = score >= 80 ? 'text-green-400' : score >= 50 ? 'text-yellow-400' : 'text-red-400';
+      
+      content.innerHTML = `
+        <div class="text-center mb-8">
+          <div class="text-6xl mb-4">${score >= 80 ? '🎉' : score >= 50 ? '👍' : '📚'}</div>
+          <p class="text-4xl font-black ${scoreColor}">${score}%</p>
+          <p class="text-gray-400 mt-2">${correct} من ${total} صحيحة</p>
+        </div>
+        <div class="space-y-4">
+          ${results.map((r, i) => `
+            <div class="p-4 rounded-xl ${r.isCorrect ? 'bg-green-500/20 border border-green-500/50' : 'bg-red-500/20 border border-red-500/50'}">
+              <p class="font-bold mb-2">${i + 1}. ${r.question}</p>
+              <div class="space-y-1 text-sm">
+                ${r.options.map((opt, j) => {
+                  let classes = '';
+                  if (j === r.correct) classes = 'text-green-400 font-bold';
+                  else if (j === r.selected && !r.isCorrect) classes = 'text-red-400 line-through';
+                  return `<p class="${classes}">${j === r.correct ? '✓' : j === r.selected ? '✗' : '•'} ${opt}</p>`;
+                }).join('')}
               </div>
-            `).join('')}
-          </div>
-          <div class="p-6 border-t border-gray-700">
-            <button onclick="closeResultModal()" class="btn-gold w-full py-4 rounded-xl font-bold text-lg">
-              إغلاق
-            </button>
-          </div>
+            </div>
+          `).join('')}
         </div>
       `;
-      document.getElementById('modals-container').appendChild(modal);
+      
+      document.getElementById('result-modal').classList.remove('hidden');
     }
-    
-    function closeResultModal() {
-      const modal = document.getElementById('result-modal');
-      if (modal) modal.remove();
+
+    function closeResult() {
+      document.getElementById('result-modal').classList.add('hidden');
+      renderResults();
     }
-    
-    // Render student results
-    function renderStudentResults() {
-      const container = document.getElementById('results-list');
-      const results = getResults().filter(r => r.resultStudentPhone === currentStudent.studentPhone);
+
+    // Render Results
+    function renderResults() {
+      const list = document.getElementById('results-list');
+      /* DATABASE_STORAGE - جلب نتائج الطالب */
+      const results = allData.filter(d => d.type === 'result' && d.studentPhone === currentUser.phone);
       
       if (results.length === 0) {
-        container.innerHTML = `
-          <div class="text-center text-gray-400 py-12">
-            <svg class="w-16 h-16 mx-auto mb-4 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
-            </svg>
-            <p>لا توجد نتائج بعد</p>
-          </div>`;
+        list.innerHTML = '<p class="text-gray-400 text-center py-10">لم تقم بأي امتحان بعد</p>';
         return;
       }
-      
-      container.innerHTML = results.map(result => {
-        const exam = getExams().find(e => e.__backendId === result.resultExamId);
-        const [correct, total] = result.resultScore.split('/').map(Number);
-        const percentage = Math.round((correct / total) * 100);
-        
+
+      // Get exam names
+      const examNames = {};
+      allData.filter(d => d.type === 'exam').forEach(e => {
+        examNames[e.examId] = e.courseName;
+      });
+
+      list.innerHTML = results.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).map(r => {
+        const scoreColor = r.score >= 80 ? 'text-green-400' : r.score >= 50 ? 'text-yellow-400' : 'text-red-400';
         return `
-          <div class="glass-card rounded-2xl p-6 card-hover animate-fade-in">
-            <div class="flex items-center justify-between">
-              <div class="flex items-center gap-4">
-                <div class="w-14 h-14 ${percentage >= 50 ? 'bg-green-500/20' : 'bg-red-500/20'} rounded-xl flex items-center justify-center">
-                  <span class="text-2xl font-bold ${percentage >= 50 ? 'text-green-400' : 'text-red-400'}">${percentage}%</span>
-                </div>
-                <div>
-                  <h3 class="text-lg font-bold text-white">${exam?.examTitle || 'امتحان'}</h3>
-                  <p class="text-gray-400">الدرجة: ${result.resultScore}</p>
-                </div>
-              </div>
-              <button onclick="viewResult('${result.__backendId}')" class="text-yellow-500 hover:text-yellow-400">
-                عرض التفاصيل
-              </button>
-            </div>
-          </div>
-        `;
-      }).join('');
-    }
-    
-    // View result details
-    function viewResult(resultId) {
-      const result = getResults().find(r => r.__backendId === resultId);
-      if (!result) return;
-      
-      const exam = getExams().find(e => e.__backendId === result.resultExamId);
-      const answers = JSON.parse(result.resultAnswers || '[]');
-      
-      showResultModal(exam?.examTitle || 'امتحان', result.resultScore, answers);
-    }
-    
-    // Admin functions
-    function updateOverviewStats() {
-      const students = getStudents().filter(s => s.studentStatus === 'approved');
-      const courses = getCourses();
-      const views = getVideoViews();
-      const completedViews = views.filter(v => v.videoViewCompleted === 'true');
-      
-      document.getElementById('total-students').textContent = students.length;
-      document.getElementById('total-courses').textContent = courses.length;
-      document.getElementById('total-views').textContent = views.length;
-      document.getElementById('completed-views').textContent = completedViews.length;
-      
-      // Recent requests
-      const pendingRequests = getStudents().filter(s => s.studentStatus === 'pending').slice(0, 5);
-      const recentContainer = document.getElementById('recent-requests');
-      
-      if (pendingRequests.length === 0) {
-        recentContainer.innerHTML = '<p class="text-gray-400 text-center py-4">لا توجد طلبات جديدة</p>';
-      } else {
-        recentContainer.innerHTML = pendingRequests.map(s => `
-          <div class="flex items-center justify-between p-3 glass-card rounded-xl">
+          <div class="card-glass rounded-xl p-4 flex justify-between items-center">
             <div>
-              <p class="font-bold text-white">${s.studentName}</p>
-              <p class="text-gray-400 text-sm">${GRADES[s.studentGrade]}</p>
+              <h4 class="font-bold">${examNames[r.examId] || 'امتحان'}</h4>
+              <p class="text-gray-400 text-sm">${new Date(r.createdAt).toLocaleDateString('ar-EG')}</p>
             </div>
-            <span class="text-yellow-500 text-sm">في الانتظار</span>
-          </div>
-        `).join('');
-      }
-      
-      // Update badge
-      const badge = document.getElementById('requests-badge');
-      if (pendingRequests.length > 0) {
-        badge.textContent = pendingRequests.length;
-        badge.classList.remove('hidden');
-      } else {
-        badge.classList.add('hidden');
-      }
-    }
-    
-    // Render requests
-    function renderRequests() {
-      const container = document.getElementById('requests-list');
-      const requests = getStudents().filter(s => s.studentStatus === 'pending');
-      
-      if (requests.length === 0) {
-        container.innerHTML = '<p class="text-gray-400 text-center py-12">لا توجد طلبات جديدة</p>';
-        return;
-      }
-      
-      container.innerHTML = requests.map(s => `
-        <div class="glass-card rounded-2xl p-6 animate-fade-in">
-          <div class="flex items-center justify-between flex-wrap gap-4">
-            <div class="flex items-center gap-4">
-              <div class="w-14 h-14 gold-gradient rounded-full flex items-center justify-center">
-                <span class="text-black font-bold text-xl">${s.studentName.charAt(0)}</span>
-              </div>
-              <div>
-                <h3 class="text-lg font-bold text-white">${s.studentName}</h3>
-                <p class="text-gray-400">${s.studentPhone}</p>
-                <p class="text-yellow-500 text-sm">${GRADES[s.studentGrade]}</p>
-              </div>
-            </div>
-            <div class="flex gap-3">
-              <button onclick="approveStudent('${s.__backendId}')" class="btn-gold px-6 py-2 rounded-xl font-bold">
-                قبول
-              </button>
-              <button onclick="rejectStudent('${s.__backendId}')" class="glass-card px-6 py-2 rounded-xl font-bold text-red-400 hover:bg-red-500/20">
-                رفض
-              </button>
-            </div>
-          </div>
-        </div>
-      `).join('');
-    }
-    
-    // Approve/Reject student
-    async function approveStudent(studentId) {
-      const student = getStudents().find(s => s.__backendId === studentId);
-      if (!student) return;
-      
-      const result = await window.dataSdk.update({
-        ...student,
-        studentStatus: 'approved'
-      });
-      
-      if (result.isOk) {
-        showToast('تم قبول الطالب بنجاح', 'success');
-      }
-    }
-    
-    async function rejectStudent(studentId) {
-      const student = getStudents().find(s => s.__backendId === studentId);
-      if (!student) return;
-      
-      const result = await window.dataSdk.update({
-        ...student,
-        studentStatus: 'rejected'
-      });
-      
-      if (result.isOk) {
-        showToast('تم رفض الطالب', 'info');
-      }
-    }
-    
-    // Render students
-    function renderStudents() {
-      const container = document.getElementById('students-list');
-      const students = getStudents().filter(s => s.studentStatus === 'approved');
-      
-      if (students.length === 0) {
-        container.innerHTML = '<p class="text-gray-400 text-center py-12">لا يوجد طلاب مسجلين</p>';
-        return;
-      }
-      
-      container.innerHTML = students.map(s => {
-        const views = getVideoViews().filter(v => v.videoViewStudentPhone === s.studentPhone);
-        const completedViews = views.filter(v => v.videoViewCompleted === 'true');
-        
-        return `
-          <div class="glass-card rounded-2xl p-6 animate-fade-in">
-            <div class="flex items-center justify-between flex-wrap gap-4">
-              <div class="flex items-center gap-4">
-                <div class="w-14 h-14 gold-gradient rounded-full flex items-center justify-center">
-                  <span class="text-black font-bold text-xl">${s.studentName.charAt(0)}</span>
-                </div>
-                <div>
-                  <h3 class="text-lg font-bold text-white">${s.studentName}</h3>
-                  <p class="text-gray-400">${s.studentPhone}</p>
-                  <p class="text-yellow-500 text-sm">${GRADES[s.studentGrade]}</p>
-                </div>
-              </div>
-              <div class="text-left">
-                <p class="text-gray-400">المشاهدات: <span class="text-white">${views.length}</span></p>
-                <p class="text-gray-400">المكتملة: <span class="text-green-400">${completedViews.length}</span></p>
-              </div>
+            <div class="text-left">
+              <p class="text-2xl font-black ${scoreColor}">${r.score}%</p>
+              <p class="text-gray-400 text-sm">${Math.round(r.score * r.totalQuestions / 100)} / ${r.totalQuestions}</p>
             </div>
           </div>
         `;
       }).join('');
     }
-    
-    // Render admin courses
-    function renderAdminCourses() {
-      const container = document.getElementById('admin-courses-list');
-      const courses = getCourses();
-      
-      if (courses.length === 0) {
-        container.innerHTML = '<p class="text-gray-400 text-center py-12">لا توجد كورسات</p>';
-        return;
-      }
-      
-      container.innerHTML = courses.map(c => `
-        <div class="glass-card rounded-2xl p-6 animate-fade-in">
-          <div class="flex items-center justify-between flex-wrap gap-4">
-            <div>
-              <h3 class="text-lg font-bold text-white">${c.courseName}</h3>
-              <p class="text-gray-400 text-sm">${c.courseDescription || 'لا يوجد وصف'}</p>
-              <p class="text-yellow-500 text-sm mt-1">${GRADES[c.courseGrade]}</p>
-            </div>
-            <div class="flex gap-3">
-              <button onclick="editCourse('${c.__backendId}')" class="glass-card px-4 py-2 rounded-xl text-blue-400 hover:bg-blue-500/20">
-                تعديل
-              </button>
-              <button onclick="deleteCourse('${c.__backendId}')" class="glass-card px-4 py-2 rounded-xl text-red-400 hover:bg-red-500/20">
-                حذف
-              </button>
-            </div>
-          </div>
-        </div>
-      `).join('');
-    }
-    
-    // Add course modal
-    function showAddCourseModal() {
-      const modal = document.createElement('div');
-      modal.className = 'modal-overlay';
-      modal.id = 'add-course-modal';
-      modal.innerHTML = `
-        <div class="glass-card rounded-3xl w-full max-w-lg mx-4 animate-fade-in">
-          <div class="p-6 border-b border-gray-700">
-            <h3 class="text-xl font-bold gold-text">إضافة كورس جديد</h3>
-          </div>
-          <form id="add-course-form" onsubmit="addCourse(event)" class="p-6">
-            <div class="mb-4">
-              <label for="course-name" class="block text-gray-300 mb-2">اسم الكورس</label>
-              <input type="text" id="course-name" class="input-dark w-full px-4 py-3 rounded-xl" required>
-            </div>
-            <div class="mb-4">
-              <label for="course-description" class="block text-gray-300 mb-2">الوصف</label>
-              <textarea id="course-description" class="input-dark w-full px-4 py-3 rounded-xl" rows="3"></textarea>
-            </div>
-            <div class="mb-4">
-              <label for="course-video" class="block text-gray-300 mb-2">رابط الفيديو (YouTube أو غيره)</label>
-              <input type="url" id="course-video" class="input-dark w-full px-4 py-3 rounded-xl" placeholder="https://..." required>
-            </div>
-            <div class="mb-6">
-              <label for="course-grade" class="block text-gray-300 mb-2">الصف الدراسي</label>
-              <select id="course-grade" class="input-dark w-full px-4 py-3 rounded-xl" required>
-                <option value="">اختر الصف</option>
-                <option value="prep1">أولى إعدادي</option>
-                <option value="prep2">تانية إعدادي</option>
-                <option value="prep3">تالتة إعدادي</option>
-                <option value="sec1">أولى ثانوي</option>
-                <option value="sec2">تانية ثانوي</option>
-                <option value="sec3">تالتة ثانوي</option>
-              </select>
-            </div>
-            <div class="flex gap-4">
-              <button type="submit" class="btn-gold flex-1 py-3 rounded-xl font-bold">إضافة</button>
-              <button type="button" onclick="closeAddCourseModal()" class="glass-card flex-1 py-3 rounded-xl font-bold text-gray-300">إلغاء</button>
-            </div>
-          </form>
-        </div>
-      `;
-      document.getElementById('modals-container').appendChild(modal);
-    }
-    
-    function closeAddCourseModal() {
-      const modal = document.getElementById('add-course-modal');
-      if (modal) modal.remove();
-    }
-    
-    async function addCourse(e) {
-      e.preventDefault();
-      
-      const name = document.getElementById('course-name').value.trim();
-      const description = document.getElementById('course-description').value.trim();
-      const videoUrl = document.getElementById('course-video').value.trim();
-      const grade = document.getElementById('course-grade').value;
-      
-      if (allData.length >= 999) {
-        showToast('تم الوصول للحد الأقصى من البيانات', 'error');
-        return;
-      }
-      
-      const result = await window.dataSdk.create({
-        type: 'course',
-        courseName: name,
-        courseDescription: description,
-        courseVideoUrl: videoUrl,
-        courseGrade: grade,
-        createdAt: new Date().toISOString()
-      });
-      
-      if (result.isOk) {
-        showToast('تم إضافة الكورس بنجاح', 'success');
-        closeAddCourseModal();
-      }
-    }
-    
-    // Edit course
-    function editCourse(courseId) {
-      const course = getCourses().find(c => c.__backendId === courseId);
-      if (!course) return;
-      
-      const modal = document.createElement('div');
-      modal.className = 'modal-overlay';
-      modal.id = 'edit-course-modal';
-      modal.innerHTML = `
-        <div class="glass-card rounded-3xl w-full max-w-lg mx-4 animate-fade-in">
-          <div class="p-6 border-b border-gray-700">
-            <h3 class="text-xl font-bold gold-text">تعديل الكورس</h3>
-          </div>
-          <form id="edit-course-form" onsubmit="updateCourse(event, '${courseId}')" class="p-6">
-            <div class="mb-4">
-              <label for="edit-course-name" class="block text-gray-300 mb-2">اسم الكورس</label>
-              <input type="text" id="edit-course-name" class="input-dark w-full px-4 py-3 rounded-xl" value="${course.courseName}" required>
-            </div>
-            <div class="mb-4">
-              <label for="edit-course-description" class="block text-gray-300 mb-2">الوصف</label>
-              <textarea id="edit-course-description" class="input-dark w-full px-4 py-3 rounded-xl" rows="3">${course.courseDescription || ''}</textarea>
-            </div>
-            <div class="mb-4">
-              <label for="edit-course-video" class="block text-gray-300 mb-2">رابط الفيديو</label>
-              <input type="url" id="edit-course-video" class="input-dark w-full px-4 py-3 rounded-xl" value="${course.courseVideoUrl}" required>
-            </div>
-            <div class="mb-6">
-              <label for="edit-course-grade" class="block text-gray-300 mb-2">الصف الدراسي</label>
-              <select id="edit-course-grade" class="input-dark w-full px-4 py-3 rounded-xl" required>
-                <option value="prep1" ${course.courseGrade === 'prep1' ? 'selected' : ''}>أولى إعدادي</option>
-                <option value="prep2" ${course.courseGrade === 'prep2' ? 'selected' : ''}>تانية إعدادي</option>
-                <option value="prep3" ${course.courseGrade === 'prep3' ? 'selected' : ''}>تالتة إعدادي</option>
-                <option value="sec1" ${course.courseGrade === 'sec1' ? 'selected' : ''}>أولى ثانوي</option>
-                <option value="sec2" ${course.courseGrade === 'sec2' ? 'selected' : ''}>تانية ثانوي</option>
-                <option value="sec3" ${course.courseGrade === 'sec3' ? 'selected' : ''}>تالتة ثانوي</option>
-              </select>
-            </div>
-            <div class="flex gap-4">
-              <button type="submit" class="btn-gold flex-1 py-3 rounded-xl font-bold">حفظ</button>
-              <button type="button" onclick="closeEditCourseModal()" class="glass-card flex-1 py-3 rounded-xl font-bold text-gray-300">إلغاء</button>
-            </div>
-          </form>
-        </div>
-      `;
-      document.getElementById('modals-container').appendChild(modal);
-    }
-    
-    function closeEditCourseModal() {
-      const modal = document.getElementById('edit-course-modal');
-      if (modal) modal.remove();
-    }
-    
-    async function updateCourse(e, courseId) {
-      e.preventDefault();
-      
-      const course = getCourses().find(c => c.__backendId === courseId);
-      if (!course) return;
-      
-      const result = await window.dataSdk.update({
-        ...course,
-        courseName: document.getElementById('edit-course-name').value.trim(),
-        courseDescription: document.getElementById('edit-course-description').value.trim(),
-        courseVideoUrl: document.getElementById('edit-course-video').value.trim(),
-        courseGrade: document.getElementById('edit-course-grade').value
-      });
-      
-      if (result.isOk) {
-        showToast('تم تحديث الكورس بنجاح', 'success');
-        closeEditCourseModal();
-      }
-    }
-    
-    // Delete course
-    async function deleteCourse(courseId) {
-      const course = getCourses().find(c => c.__backendId === courseId);
-      if (!course) return;
-      
-      // Show confirmation
-      const modal = document.createElement('div');
-      modal.className = 'modal-overlay';
-      modal.id = 'confirm-delete-modal';
-      modal.innerHTML = `
-        <div class="glass-card rounded-3xl w-full max-w-md mx-4 p-6 text-center animate-fade-in">
-          <div class="w-16 h-16 mx-auto mb-4 bg-red-500/20 rounded-full flex items-center justify-center">
-            <svg class="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
-            </svg>
-          </div>
-          <h3 class="text-xl font-bold text-white mb-2">حذف الكورس؟</h3>
-          <p class="text-gray-400 mb-6">هل أنت متأكد من حذف "${course.courseName}"؟</p>
-          <div class="flex gap-4">
-            <button onclick="confirmDeleteCourse('${courseId}')" class="flex-1 py-3 rounded-xl font-bold bg-red-500 text-white hover:bg-red-600">حذف</button>
-            <button onclick="closeConfirmModal()" class="glass-card flex-1 py-3 rounded-xl font-bold text-gray-300">إلغاء</button>
-          </div>
-        </div>
-      `;
-      document.getElementById('modals-container').appendChild(modal);
-    }
-    
-    function closeConfirmModal() {
-      const modal = document.getElementById('confirm-delete-modal');
-      if (modal) modal.remove();
-    }
-    
-    async function confirmDeleteCourse(courseId) {
-      const course = getCourses().find(c => c.__backendId === courseId);
-      if (!course) return;
-      
-      const result = await window.dataSdk.delete(course);
-      if (result.isOk) {
-        showToast('تم حذف الكورس', 'info');
-        closeConfirmModal();
-      }
-    }
-    
-    // Render admin exams
-    function renderAdminExams() {
-      const container = document.getElementById('admin-exams-list');
-      const exams = getExams();
-      
-      if (exams.length === 0) {
-        container.innerHTML = '<p class="text-gray-400 text-center py-12">لا توجد امتحانات</p>';
-        return;
-      }
-      
-      container.innerHTML = exams.map(e => {
-        const questions = JSON.parse(e.examQuestions || '[]');
-        return `
-          <div class="glass-card rounded-2xl p-6 animate-fade-in">
-            <div class="flex items-center justify-between flex-wrap gap-4">
-              <div>
-                <h3 class="text-lg font-bold text-white">${e.examTitle}</h3>
-                <p class="text-gray-400 text-sm">${questions.length} سؤال</p>
-                <p class="text-yellow-500 text-sm mt-1">${GRADES[e.examGrade]}</p>
-              </div>
-              <div class="flex gap-3">
-                <button onclick="editExam('${e.__backendId}')" class="glass-card px-4 py-2 rounded-xl text-blue-400 hover:bg-blue-500/20">
-                  تعديل
-                </button>
-                <button onclick="deleteExam('${e.__backendId}')" class="glass-card px-4 py-2 rounded-xl text-red-400 hover:bg-red-500/20">
-                  حذف
-                </button>
-              </div>
-            </div>
-          </div>
-        `;
-      }).join('');
-    }
-    
-    // Add exam modal
-    let examQuestions = [];
-    
-    function showAddExamModal() {
-      examQuestions = [];
-      
-      const modal = document.createElement('div');
-      modal.className = 'modal-overlay';
-      modal.id = 'add-exam-modal';
-      modal.innerHTML = `
-        <div class="glass-card rounded-3xl w-full max-w-2xl mx-4 max-h-[90%] overflow-auto animate-fade-in">
-          <div class="p-6 border-b border-gray-700 sticky top-0 bg-gray-900/95">
-            <h3 class="text-xl font-bold gold-text">إضافة امتحان جديد</h3>
-          </div>
-          <form id="add-exam-form" onsubmit="addExam(event)" class="p-6">
-            <div class="mb-4">
-              <label for="exam-title" class="block text-gray-300 mb-2">عنوان الامتحان</label>
-              <input type="text" id="exam-title" class="input-dark w-full px-4 py-3 rounded-xl" required>
-            </div>
-            <div class="mb-6">
-              <label for="exam-grade" class="block text-gray-300 mb-2">الصف الدراسي</label>
-              <select id="exam-grade" class="input-dark w-full px-4 py-3 rounded-xl" required>
-                <option value="">اختر الصف</option>
-                <option value="prep1">أولى إعدادي</option>
-                <option value="prep2">تانية إعدادي</option>
-                <option value="prep3">تالتة إعدادي</option>
-                <option value="sec1">أولى ثانوي</option>
-                <option value="sec2">تانية ثانوي</option>
-                <option value="sec3">تالتة ثانوي</option>
-              </select>
-            </div>
-            
-            <div class="mb-4">
-              <div class="flex items-center justify-between mb-4">
-                <h4 class="text-lg font-bold text-white">الأسئلة</h4>
-                <button type="button" onclick="addQuestion()" class="text-yellow-500 hover:text-yellow-400 flex items-center gap-2">
-                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
-                  </svg>
-                  إضافة سؤال
-                </button>
-              </div>
-              <div id="questions-container" class="space-y-4">
-                <p class="text-gray-400 text-center py-4">لم يتم إضافة أسئلة بعد</p>
-              </div>
-            </div>
-            
-            <div class="flex gap-4 mt-6">
-              <button type="submit" class="btn-gold flex-1 py-3 rounded-xl font-bold">إضافة الامتحان</button>
-              <button type="button" onclick="closeAddExamModal()" class="glass-card flex-1 py-3 rounded-xl font-bold text-gray-300">إلغاء</button>
-            </div>
-          </form>
-        </div>
-      `;
-      document.getElementById('modals-container').appendChild(modal);
-    }
-    
-    function closeAddExamModal() {
-      examQuestions = [];
-      const modal = document.getElementById('add-exam-modal');
-      if (modal) modal.remove();
-    }
-    
-    function addQuestion() {
-      const index = examQuestions.length;
-      examQuestions.push({
-        question: '',
-        options: ['', '', '', ''],
-        correctAnswer: 0
-      });
-      renderQuestions();
-    }
-    
-    function removeQuestion(index) {
-      examQuestions.splice(index, 1);
-      renderQuestions();
-    }
-    
-    function renderQuestions() {
-      const container = document.getElementById('questions-container');
-      
-      if (examQuestions.length === 0) {
-        container.innerHTML = '<p class="text-gray-400 text-center py-4">لم يتم إضافة أسئلة بعد</p>';
-        return;
-      }
-      
-      container.innerHTML = examQuestions.map((q, i) => `
-        <div class="glass-card rounded-xl p-4">
-          <div class="flex items-center justify-between mb-3">
-            <span class="text-yellow-500 font-bold">سؤال ${i + 1}</span>
-            <button type="button" onclick="removeQuestion(${i})" class="text-red-400 hover:text-red-300">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
-              </svg>
-            </button>
-          </div>
-          <input type="text" placeholder="نص السؤال" class="input-dark w-full px-3 py-2 rounded-lg mb-3" 
-                 value="${q.question}" onchange="updateQuestion(${i}, 'question', this.value)" required>
-          
-          <div class="space-y-2">
-            ${q.options.map((opt, j) => `
-              <div class="flex items-center gap-2">
-                <input type="radio" name="correct-${i}" ${q.correctAnswer === j ? 'checked' : ''} 
-                       onchange="updateQuestion(${i}, 'correctAnswer', ${j})" class="w-4 h-4 accent-green-500">
-                <input type="text" placeholder="الإجابة ${j + 1}" class="input-dark flex-1 px-3 py-2 rounded-lg"
-                       value="${opt}" onchange="updateOption(${i}, ${j}, this.value)" required>
-              </div>
-            `).join('')}
-          </div>
-          <p class="text-gray-400 text-xs mt-2">* اختر الإجابة الصحيحة</p>
-        </div>
-      `).join('');
-    }
-    
-    function updateQuestion(index, field, value) {
-      if (field === 'correctAnswer') {
-        examQuestions[index].correctAnswer = value;
-      } else {
-        examQuestions[index][field] = value;
-      }
-    }
-    
-    function updateOption(qIndex, optIndex, value) {
-      examQuestions[qIndex].options[optIndex] = value;
-    }
-    
-    async function addExam(e) {
-      e.preventDefault();
-      
-      if (examQuestions.length === 0) {
-        showToast('يجب إضافة سؤال واحد على الأقل', 'error');
-        return;
-      }
-      
-      // Validate questions
-      for (let i = 0; i < examQuestions.length; i++) {
-        if (!examQuestions[i].question.trim()) {
-          showToast(`السؤال ${i + 1} فارغ`, 'error');
-          return;
-        }
-        for (let j = 0; j < examQuestions[i].options.length; j++) {
-          if (!examQuestions[i].options[j].trim()) {
-            showToast(`الإجابة ${j + 1} في السؤال ${i + 1} فارغة`, 'error');
-            return;
-          }
-        }
-      }
-      
-      if (allData.length >= 999) {
-        showToast('تم الوصول للحد الأقصى من البيانات', 'error');
-        return;
-      }
-      
-      const title = document.getElementById('exam-title').value.trim();
-      const grade = document.getElementById('exam-grade').value;
-      
-      const result = await window.dataSdk.create({
-        type: 'exam',
-        examTitle: title,
-        examGrade: grade,
-        examQuestions: JSON.stringify(examQuestions),
-        createdAt: new Date().toISOString()
-      });
-      
-      if (result.isOk) {
-        showToast('تم إضافة الامتحان بنجاح', 'success');
-        closeAddExamModal();
-      }
-    }
-    
-    // Edit exam
-    function editExam(examId) {
-      const exam = getExams().find(e => e.__backendId === examId);
-      if (!exam) return;
-      
-      examQuestions = JSON.parse(exam.examQuestions || '[]');
-      
-      const modal = document.createElement('div');
-      modal.className = 'modal-overlay';
-      modal.id = 'edit-exam-modal';
-      modal.innerHTML = `
-        <div class="glass-card rounded-3xl w-full max-w-2xl mx-4 max-h-[90%] overflow-auto animate-fade-in">
-          <div class="p-6 border-b border-gray-700 sticky top-0 bg-gray-900/95">
-            <h3 class="text-xl font-bold gold-text">تعديل الامتحان</h3>
-          </div>
-          <form id="edit-exam-form" onsubmit="updateExam(event, '${examId}')" class="p-6">
-            <div class="mb-4">
-              <label for="edit-exam-title" class="block text-gray-300 mb-2">عنوان الامتحان</label>
-              <input type="text" id="edit-exam-title" class="input-dark w-full px-4 py-3 rounded-xl" value="${exam.examTitle}" required>
-            </div>
-            <div class="mb-6">
-              <label for="edit-exam-grade" class="block text-gray-300 mb-2">الصف الدراسي</label>
-              <select id="edit-exam-grade" class="input-dark w-full px-4 py-3 rounded-xl" required>
-                <option value="prep1" ${exam.examGrade === 'prep1' ? 'selected' : ''}>أولى إعدادي</option>
-                <option value="prep2" ${exam.examGrade === 'prep2' ? 'selected' : ''}>تانية إعدادي</option>
-                <option value="prep3" ${exam.examGrade === 'prep3' ? 'selected' : ''}>تالتة إعدادي</option>
-                <option value="sec1" ${exam.examGrade === 'sec1' ? 'selected' : ''}>أولى ثانوي</option>
-                <option value="sec2" ${exam.examGrade === 'sec2' ? 'selected' : ''}>تانية ثانوي</option>
-                <option value="sec3" ${exam.examGrade === 'sec3' ? 'selected' : ''}>تالتة ثانوي</option>
-              </select>
-            </div>
-            
-            <div class="mb-4">
-              <div class="flex items-center justify-between mb-4">
-                <h4 class="text-lg font-bold text-white">الأسئلة</h4>
-                <button type="button" onclick="addQuestion(); renderEditQuestions();" class="text-yellow-500 hover:text-yellow-400 flex items-center gap-2">
-                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
-                  </svg>
-                  إضافة سؤال
-                </button>
-              </div>
-              <div id="edit-questions-container" class="space-y-4">
-              </div>
-            </div>
-            
-            <div class="flex gap-4 mt-6">
-              <button type="submit" class="btn-gold flex-1 py-3 rounded-xl font-bold">حفظ</button>
-              <button type="button" onclick="closeEditExamModal()" class="glass-card flex-1 py-3 rounded-xl font-bold text-gray-300">إلغاء</button>
-            </div>
-          </form>
-        </div>
-      `;
-      document.getElementById('modals-container').appendChild(modal);
-      renderEditQuestions();
-    }
-    
-    function closeEditExamModal() {
-      examQuestions = [];
-      const modal = document.getElementById('edit-exam-modal');
-      if (modal) modal.remove();
-    }
-    
-    function renderEditQuestions() {
-      const container = document.getElementById('edit-questions-container');
-      
-      if (examQuestions.length === 0) {
-        container.innerHTML = '<p class="text-gray-400 text-center py-4">لم يتم إضافة أسئلة بعد</p>';
-        return;
-      }
-      
-      container.innerHTML = examQuestions.map((q, i) => `
-        <div class="glass-card rounded-xl p-4">
-          <div class="flex items-center justify-between mb-3">
-            <span class="text-yellow-500 font-bold">سؤال ${i + 1}</span>
-            <button type="button" onclick="removeQuestion(${i}); renderEditQuestions();" class="text-red-400 hover:text-red-300">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
-              </svg>
-            </button>
-          </div>
-          <input type="text" placeholder="نص السؤال" class="input-dark w-full px-3 py-2 rounded-lg mb-3" 
-                 value="${q.question}" onchange="updateQuestion(${i}, 'question', this.value)" required>
-          
-          <div class="space-y-2">
-            ${q.options.map((opt, j) => `
-              <div class="flex items-center gap-2">
-                <input type="radio" name="edit-correct-${i}" ${q.correctAnswer === j ? 'checked' : ''} 
-                       onchange="updateQuestion(${i}, 'correctAnswer', ${j})" class="w-4 h-4 accent-green-500">
-                <input type="text" placeholder="الإجابة ${j + 1}" class="input-dark flex-1 px-3 py-2 rounded-lg"
-                       value="${opt}" onchange="updateOption(${i}, ${j}, this.value)" required>
-              </div>
-            `).join('')}
-          </div>
-        </div>
-      `).join('');
-    }
-    
-    async function updateExam(e, examId) {
-      e.preventDefault();
-      
-      const exam = getExams().find(ex => ex.__backendId === examId);
-      if (!exam) return;
-      
-      if (examQuestions.length === 0) {
-        showToast('يجب إضافة سؤال واحد على الأقل', 'error');
-        return;
-      }
-      
-      const result = await window.dataSdk.update({
-        ...exam,
-        examTitle: document.getElementById('edit-exam-title').value.trim(),
-        examGrade: document.getElementById('edit-exam-grade').value,
-        examQuestions: JSON.stringify(examQuestions)
-      });
-      
-      if (result.isOk) {
-        showToast('تم تحديث الامتحان بنجاح', 'success');
-        closeEditExamModal();
-      }
-    }
-    
-    // Delete exam
-    async function deleteExam(examId) {
-      const exam = getExams().find(e => e.__backendId === examId);
-      if (!exam) return;
-      
-      const modal = document.createElement('div');
-      modal.className = 'modal-overlay';
-      modal.id = 'confirm-delete-modal';
-      modal.innerHTML = `
-        <div class="glass-card rounded-3xl w-full max-w-md mx-4 p-6 text-center animate-fade-in">
-          <div class="w-16 h-16 mx-auto mb-4 bg-red-500/20 rounded-full flex items-center justify-center">
-            <svg class="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
-            </svg>
-          </div>
-          <h3 class="text-xl font-bold text-white mb-2">حذف الامتحان؟</h3>
-          <p class="text-gray-400 mb-6">هل أنت متأكد من حذف "${exam.examTitle}"؟</p>
-          <div class="flex gap-4">
-            <button onclick="confirmDeleteExam('${examId}')" class="flex-1 py-3 rounded-xl font-bold bg-red-500 text-white hover:bg-red-600">حذف</button>
-            <button onclick="closeConfirmModal()" class="glass-card flex-1 py-3 rounded-xl font-bold text-gray-300">إلغاء</button>
-          </div>
-        </div>
-      `;
-      document.getElementById('modals-container').appendChild(modal);
-    }
-    
-    async function confirmDeleteExam(examId) {
-      const exam = getExams().find(e => e.__backendId === examId);
-      if (!exam) return;
-      
-      const result = await window.dataSdk.delete(exam);
-      if (result.isOk) {
-        showToast('تم حذف الامتحان', 'info');
-        closeConfirmModal();
-      }
-    }
-    
-    // Render analytics
-    function renderAnalytics() {
-      const students = getStudents().filter(s => s.studentStatus === 'approved');
-      const views = getVideoViews();
-      const completedViews = views.filter(v => v.videoViewCompleted === 'true');
-      
-      // Grade distribution
-      const gradeDistribution = {};
-      Object.keys(GRADES).forEach(g => gradeDistribution[g] = 0);
-      students.forEach(s => {
-        if (gradeDistribution[s.studentGrade] !== undefined) {
-          gradeDistribution[s.studentGrade]++;
-        }
-      });
-      
-      const maxStudents = Math.max(...Object.values(gradeDistribution), 1);
-      
-      document.getElementById('grade-distribution').innerHTML = Object.entries(GRADES).map(([key, label]) => {
-        const count = gradeDistribution[key] || 0;
-        const percentage = (count / maxStudents) * 100;
-        return `
-          <div class="flex items-center gap-4">
-            <span class="text-gray-400 w-24 text-sm">${label}</span>
-            <div class="flex-1 h-6 bg-gray-700 rounded-full overflow-hidden">
-              <div class="h-full gold-gradient transition-all duration-500" style="width: ${percentage}%"></div>
-            </div>
-            <span class="text-white font-bold w-8">${count}</span>
-          </div>
-        `;
-      }).join('');
-      
-      // View stats
-      document.getElementById('view-stats').innerHTML = `
-        <div class="flex items-center justify-between p-4 glass-card rounded-xl">
-          <span class="text-gray-400">إجمالي المشاهدات</span>
-          <span class="text-2xl font-bold gold-text">${views.length}</span>
-        </div>
-        <div class="flex items-center justify-between p-4 glass-card rounded-xl">
-          <span class="text-gray-400">المشاهدات المكتملة</span>
-          <span class="text-2xl font-bold text-green-400">${completedViews.length}</span>
-        </div>
-        <div class="flex items-center justify-between p-4 glass-card rounded-xl">
-          <span class="text-gray-400">نسبة الإكمال</span>
-          <span class="text-2xl font-bold text-blue-400">${views.length > 0 ? Math.round((completedViews.length / views.length) * 100) : 0}%</span>
-        </div>
-      `;
-    }
-    
-    // Data handler
-    const dataHandler = {
-      onDataChanged(data) {
-        allData = data;
-        
-        // Update UI based on current page
-        if (isAdmin) {
-          updateOverviewStats();
-          const currentSection = document.querySelector('#admin-dashboard section:not(.hidden)')?.id?.replace('admin-', '');
-          if (currentSection === 'requests') renderRequests();
-          if (currentSection === 'students') renderStudents();
-          if (currentSection === 'courses-admin') renderAdminCourses();
-          if (currentSection === 'exams-admin') renderAdminExams();
-          if (currentSection === 'analytics') renderAnalytics();
-        }
-        
-        if (currentStudent) {
-          renderStudentCourses();
-          renderStudentExams();
-          renderStudentResults();
-        }
-      }
-    };
-    
-    // Check saved sessions
-    function checkSavedSessions() {
-      const adminSession = localStorage.getItem('adminSession');
-      if (adminSession === 'true') {
-        isAdmin = true;
-        showPage('admin-dashboard');
-        showAdminSection('overview');
-        return true;
-      }
-      
-      const studentSession = localStorage.getItem('studentSession');
-      if (studentSession) {
-        const session = JSON.parse(studentSession);
-        const student = getStudents().find(s => 
-          s.studentPhone === session.phone && 
-          s.studentPassword === session.password &&
-          s.studentStatus === 'approved'
-        );
-        
-        if (student) {
-          currentStudent = student;
-          showStudentDashboard();
-          return true;
-        } else {
-          localStorage.removeItem('studentSession');
-        }
-      }
-      
-      return false;
-    }
-    
-    // Element SDK
-    const elementApi = {
-      defaultConfig,
-      onConfigChange: async (config) => {
-        // Update platform name if needed
-      },
-      mapToCapabilities: (config) => ({
-        recolorables: [],
-        borderables: [],
-        fontEditable: undefined,
-        fontSizeable: undefined
-      }),
-      mapToEditPanelValues: (config) => new Map([
-        ['platform_name', config.platform_name || defaultConfig.platform_name]
-      ])
-    };
-    
-    // Initialize
-    async function init() {
-      createStars();
-      
-      if (window.elementSdk) {
-        window.elementSdk.init(elementApi);
-      }
-      
-      if (window.dataSdk) {
-        const result = await window.dataSdk.init(dataHandler);
-        if (!result.isOk) {
-          console.error('Failed to initialize data SDK');
-        }
-      }
-      
-      // Wait a bit for data to load
-      setTimeout(() => {
-        if (!checkSavedSessions()) {
-          showPage('login-selection');
-        }
-      }, 1500);
-    }
-    
-    init();
   </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9c920b38f5e2134e',t:'MTc3MDI5MDY5Mi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</body>
 </html>
